@@ -1,5 +1,5 @@
 # SYSC-3303 Elevator-Simulator
-### Version: 3.0
+### Version: 5.0
 ### Authors:
 - Imran Latif: @imran1503
 - Duabo Dagogo Longjohn: @duabolongjohn
@@ -8,7 +8,7 @@
 - Qihang Peng: Qihangpeng
 
 ### Iteration goals
-Our goal for this iteration was to establish connections among subsystems using RCP which is an application of UDP. Our objective was to include multiple elevators.
+Our goal for this iteration was to create a graphical user interface while also rushing to complete establishing connections among subsystems using RCP which is an application of UDP.
 
 
 ### Deliverables
