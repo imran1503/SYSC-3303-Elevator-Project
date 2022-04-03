@@ -51,7 +51,7 @@ public class Elevator  {
     }
 
     public Elevator(int id, ArrayList<ElevatorButton> elevatorButtonArrayList, ArrayList<ElevatorLamp> elevatorLampArrayList,
-                    ElevatorMotor elevatorMotor, ElevatorDoor elevatorDoor, int amountOfFloorsInBuilding, ElevatorState state) {
+                    ElevatorMotor elevatorMotor, ElevatorDoor elevatorDoor, int amountOfFloorsInBuilding, ElevatorState state, int fault) {
         buttons = new ArrayList<ElevatorButton>();
         lamps = new ArrayList<ElevatorLamp>();
 

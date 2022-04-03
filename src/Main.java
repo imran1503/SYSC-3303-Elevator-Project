@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, SocketException {
         int amountOfFloorsinBuilding = 5;
 
         ArrayList<Elevator> elevators = new ArrayList<>();
@@ -90,11 +90,7 @@ public class Main {
         }
 
         FloorSubsystem floorSS = null;
-        try {
-            floorSS = new FloorSubsystem(floorsArrayList, file);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        floorSS = new FloorSubsystem(floorsArrayList, file);
         floorSS.start();
         scheduler.start();
         elevatorSS.start();

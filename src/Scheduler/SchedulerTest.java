@@ -44,7 +44,7 @@ public class SchedulerTest {
         ArrayList<Elevator> elevators = new ArrayList<>();
         ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
 
-        Elevator elevator = new Elevator(0,elevatorButtons,elevatorLamps,elevatorMotor,elevatorDoor,3, ElevatorState.IDLE);
+        Elevator elevator = new Elevator(0,elevatorButtons,elevatorLamps,elevatorMotor,elevatorDoor,3, ElevatorState.IDLE, 0);
         elevators.add(elevator);
 
         for (int i = 0; i < 3; i++) {

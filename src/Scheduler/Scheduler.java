@@ -253,8 +253,6 @@ public class Scheduler extends Thread {
             sendElevator(elevatorId, dataStopElevator);
         } catch (UnknownHostException | InterruptedException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         //TODO send packet to tell elevator to change variables to correct state
@@ -463,7 +461,7 @@ public class Scheduler extends Thread {
         	
         	if(floordata[7] == 1) {
         		System.out.println("\nFault: There is fault in event data provided");
-        		return -1; //got invalid event data
+        		//return -1; //got invalid event data
         		
         	}
         	
