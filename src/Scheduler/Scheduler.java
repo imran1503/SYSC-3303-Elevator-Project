@@ -759,51 +759,96 @@ public class Scheduler extends Thread {
                 activeState(elevatorList, elevatorIndex);
             }
 
+            for (int i = 0; i < 3; i++) {
+                byte[] dataGetDest = new byte[3];
+                dataGetDest[0] = (byte) i;
+                dataGetDest[1] = 0;
+                dataGetDest[2] = 5;
+                System.out.println("DEBUG >> Scheduler RUN DataGetDest[0] = byte(ElevId): " + dataGetDest[0] + " And elevId as int: " + elevatorIndex);
 
-            byte[] dataGetDest = new byte[3];
-            dataGetDest[0] = (byte) elevatorIndex;
-            dataGetDest[1] = 0;
-            dataGetDest[2] = 5;
-            System.out.println("DEBUG >> Scheduler RUN DataGetDest[0] = byte(ElevId): " + dataGetDest[0] + " And elevId as int: " + elevatorIndex);
-
-            try {
-                sendElevator(elevatorIndex, dataGetDest);
-            }
-            catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                try {
+                    sendElevator(elevatorIndex, dataGetDest);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
 
-            //retireve dest from packet
+                //retireve dest from packet
 
-            byte[] tempByteDest = new byte[23];
-            recieveElevatorPacket = new DatagramPacket(tempByteDest, tempByteDest.length);
-            try {
-                recieveElevatorSocket.receive(recieveElevatorPacket);
-            } catch (IOException e) {
-                e.printStackTrace();
+                byte[] tempByteDest = new byte[23];
+                recieveElevatorPacket = new DatagramPacket(tempByteDest, tempByteDest.length);
+                try {
+                    recieveElevatorSocket.receive(recieveElevatorPacket);
+                } catch (IOException e) {
+                    e.printStackTrace();
 
-            }
+                }
 
-            byte[] dests = recieveElevatorPacket.getData();
+                byte[] dests = recieveElevatorPacket.getData();
 
 
-            System.out.println("Scheduler RUN Dest length: "  + dests.length);
-            if (dests.length==23){
-                schedulerState=SchedulerState.IDLE_STATE;
-                activeState(elevatorList, elevatorIndex);
+                System.out.println("Scheduler RUN Dest length: " + dests.length);
+                if (dests.length == 23) {
+                    schedulerState = SchedulerState.IDLE_STATE;
+                    activeState(elevatorList, elevatorIndex);
+                    byte[] tempData = new byte[3];
+                    tempData[0] = 0;
+                    tempData[1] = 0;
+                    tempData[2] = 7;
 
-            }
-            else{
-                run=false;
+                    byte[] recieveTempData = new byte[16];
+                    try {
+                        //  sendElevatorPacket = new DatagramPacket(tempData, tempData.length, InetAddress.getByName("localhost"), 5002);
+                        sendElevator(elevatorIndex, tempData);
+//                System.out.println("DEBUG >> SE PORT: " + sendElevatorSocket.getPort());
+//                System.out.println("DEBUG >> RE PORT: " + recieveElevatorSocket.getPort());
+
+                        recieveElevatorPacket = new DatagramPacket(recieveTempData, recieveTempData.length);
+                        recieveElevatorSocket.receive(recieveElevatorPacket);
+                        System.out.print("DEBUG >> 007 Req All pos: recieveElevatorPacket.getData(): ");
+                        for(int j = 0; j < recieveElevatorPacket.getData().length; j++){
+                            System.out.print(recieveElevatorPacket.getData()[j]);
+
+                        }
+                        System.out.println();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+//            catch (NullPointerException e){
+//                System.out.println("DEBUG >> Null Pointer Exception @ receiving packet / sending packet ");
+//                System.out.println("DEBUG >> Have you run elevator?");
+//            }
+
+                    int[] locations = new int[4];
+
+                    locations[0] = recieveTempData[0];
+                    locations[1] = recieveTempData[2];
+                    locations[2] = recieveTempData[4];
+                    locations[3] = recieveTempData[6];
+
+                    if (dests[0] == locations[i]){
+                        loadElevator(i, locations[i]);
+                    }
+
+                }
+                else{
+                    run = false;
+                }
             }
 
         }
 
+
+
     }
+
+
 
 
     public static void main(String[] args) throws FileNotFoundException {

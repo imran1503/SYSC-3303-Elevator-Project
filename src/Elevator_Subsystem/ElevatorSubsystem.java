@@ -297,6 +297,7 @@ public class ElevatorSubsystem extends Thread{
                 System.out.println("Timing of move elevator elevator action: " + (endMove - startMove) + ", start = " + startMove + ", end = " + endMove);
                 return 1;
             } else if (data[2] == 4) {// Open doors, close doors/ load
+                System.out.println("ELEVATOR ACTION LOAD ELEVATOR IF STATEMENT ENTERED");
                 //packet structure: data[0]=elevindex, data[1]=0, data[2]=4
                 try {
                     elevators.get(elevatorIndex).load();
