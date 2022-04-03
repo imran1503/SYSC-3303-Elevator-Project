@@ -412,7 +412,7 @@ public class ElevatorSubsystem extends Thread{
             return -1;
         }
 
-       
+
 
         return 0;
     }
@@ -532,9 +532,9 @@ public class ElevatorSubsystem extends Thread{
      */
     public void run() {
         System.out.println("DEBUG >> In run method ");
-        byte[] msgFromFloor = new byte[30];
+        byte[] msgFromFloor = new byte[8];
         recieveFloorPacket = new DatagramPacket(msgFromFloor, msgFromFloor.length);
-        byte[] msgFromServer = new byte[30];
+        byte[] msgFromServer = new byte[8];
         recieveServerPacket = new DatagramPacket(msgFromServer, msgFromServer.length);
 
         //Start the timer
@@ -620,5 +620,4 @@ public class ElevatorSubsystem extends Thread{
 
     }
 }
-
 

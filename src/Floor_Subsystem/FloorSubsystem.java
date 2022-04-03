@@ -280,6 +280,9 @@ public class FloorSubsystem extends Thread{
 
             sendServerSocket.send(  createPacket(0));
 
+            //ASK ELEVATORS WHERE THEY ARE
+            
+
 
         }
         catch (IOException exception) {
@@ -301,16 +304,6 @@ public class FloorSubsystem extends Thread{
         }
         System.out.println("out of floor loop");
 
-//
-//        for (int i = 0; i < eventArrayList.size() ; i++) {
-//            try {
-//                System.out.println(floors.get(eventArrayList.get(i).getFloorNumber()).getElevators().get(0).getDestinations());
-//
-//                scheduler.callElevator(eventArrayList.get(i),floors.get(eventArrayList.get(i).getFloorNumber()).getElevators().get(0), floors.get(eventArrayList.get(i).getFloorNumber()));
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
 
         System.out.println("Floor subsystem pre Loop check ");
@@ -318,11 +311,17 @@ public class FloorSubsystem extends Thread{
             if(floors.get(i).getArrivalSensors().get(i).getArrivalSensorData(sendElevatorSocket)){
 
                 try {
-                    createPacket(floors.get(i).getElevators().get(0).getId(), floors.get(i).getFloorNumber() );
+                    createPacket(floors.get(i).getElevators().get(1).getId(), floors.get(i).getFloorNumber() );
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-               // scheduler.stopElevatorAtFloor(floors.get(i).getElevators().get(0),floors.get(i).getFloorNumber() );
+
+
+                try {
+                    createPacket(floors.get(i).getElevators().get(1).getId(), floors.get(i).getFloorNumber());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 System.out.println("Stop elevator from sensor");
             }
