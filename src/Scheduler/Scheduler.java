@@ -423,6 +423,7 @@ public class Scheduler extends Thread {
      * @return
      */
     public int receiveFloor(){
+        long startRF = System.nanoTime();
         int floorPort;
         System.out.println("DEBUG >> In schedulers recieve Floor packet function");
         System.out.println("DEBUG >> Scheduler State: " + schedulerState);
@@ -671,6 +672,10 @@ public class Scheduler extends Thread {
             e.printStackTrace();
             System.exit(1);
         }
+
+
+        long endRF = System.nanoTime();
+        System.out.println("Timing of RecieveFloor: " + (endRF - startRF) + ", start = " + startRF + ", end = " + endRF);
         return -1;
 
     }

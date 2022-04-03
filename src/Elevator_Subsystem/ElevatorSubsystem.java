@@ -284,6 +284,7 @@ public class ElevatorSubsystem extends Thread{
                 return 1;
             } else if (data[2] == 3) { //Move  elevator
                 //packet structure: data[0]=elevIndex, data[1]=0, data[2]=3 data[3]=0 data[4]=direction(1 or 0), data[5]=0, data[6]=destination floorNum, data[7] = 0
+                long startMove = System.nanoTime();
 
                 try {
                     elevators.get(elevatorIndex).move(data[4]);
@@ -292,6 +293,8 @@ public class ElevatorSubsystem extends Thread{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                long endMove = System.nanoTime();
+                System.out.println("Timing of move elevator elevator action: " + (endMove - startMove) + ", start = " + startMove + ", end = " + endMove);
                 return 1;
             } else if (data[2] == 4) {// Open doors, close doors/ load
                 //packet structure: data[0]=elevindex, data[1]=0, data[2]=4
