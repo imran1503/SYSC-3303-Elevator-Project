@@ -298,6 +298,10 @@ public class ElevatorSubsystem extends Thread{
                 return 1;
             } else if (data[2] == 4) {// Open doors, close doors/ load
                 System.out.println("ELEVATOR ACTION LOAD ELEVATOR IF STATEMENT ENTERED");
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("Total runtime of ElevatorSubsystem: " + total/Math.pow(10,9) + " s");
+
                 //packet structure: data[0]=elevindex, data[1]=0, data[2]=4
                 try {
                     elevators.get(elevatorIndex).load();
@@ -450,6 +454,8 @@ public class ElevatorSubsystem extends Thread{
         int j = 0;
         ElevatorState temp = null;
         for (int i = 0; i < data.length; i++) {
+
+
             if( data[i] == ("" + ElevatorState.LOADING).getBytes()[0]){
                 temp = ElevatorState.LOADING;
             }

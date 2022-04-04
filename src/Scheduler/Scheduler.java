@@ -255,10 +255,7 @@ public class Scheduler extends Thread {
             sendElevator(elevatorId, dataStopElevator);
         } catch (UnknownHostException | InterruptedException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         //TODO send packet to tell elevator to change variables to correct state
         try {
             sendElevator(elevatorId, data);
