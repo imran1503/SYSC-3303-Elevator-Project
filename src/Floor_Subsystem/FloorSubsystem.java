@@ -177,7 +177,7 @@ public class FloorSubsystem extends Thread {
         DatagramPacket tempPacket;
         byte[] tempByteArray = new byte[9];
         byte[] ack = "acknowledgment".getBytes();
-
+        long startCP = System.nanoTime();
 
         if (packetID == 0) {
             //This will create a packet for each event.
@@ -211,6 +211,8 @@ public class FloorSubsystem extends Thread {
             }
             System.out.println();
             tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5003);
+            long endCP = System.nanoTime();
+            System.out.println("Timing of RecieveFloor: " + (endCP - startCP) + ", start = " + startCP + ", end = " + endCP);
             return tempPacket;
         } else {
             return null;
@@ -269,37 +271,39 @@ public class FloorSubsystem extends Thread {
      */
     public void run() {
         System.out.println("DEBUG >> Run method");
-        try {
-            // Sends Create packet to scheduler
-            byte[] temp = createPacket(0).getData();
-            System.out.println("DEBUG >> run temp length: " + temp.length);
-            System.out.println("DEBUG >> CreatePacketTest");
-            for (int i = 0; i < temp.length; i++) {
-                System.out.print(temp[i]);
-            }
-            System.out.println();
+        try{
 
-            sendServerSocket.send(createPacket(0));
+            while (true) {
+                // Sends Create packet to scheduler
+                byte[] temp = createPacket(0).getData();
+                System.out.println("DEBUG >> run temp length: " + temp.length);
+                System.out.println("DEBUG >> CreatePacketTest");
+                for (int i = 0; i < temp.length; i++) {
+                    System.out.print(temp[i]);
+                }
+                System.out.println();
 
-
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.print("-");
-        }
+                sendServerSocket.send(createPacket(0));
+                long sendCp =  System.nanoTime();
+                System.out.println("Timing of send cp " + sendCp);
+                //ASK ELEVATORS WHERE THEY ARE
 
 
-        try {
-            //Receives ack packet from floor
-            byte[] ack = "Acknowledgement".getBytes();
-            receiveServerPacket = new DatagramPacket(ack, ack.length);//empty packet created
+                //Receives ack packet from floor
+                byte[] ack = "Acknowledgement".getBytes();
+                receiveServerPacket = new DatagramPacket(ack, ack.length);//empty packet created
 
-            receiveServerSocket.receive(receiveServerPacket);
+
+                receiveServerSocket.receive(receiveServerPacket);
+
+
+                System.out.println("out of floor loop 1");
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("out of floor loop");
+        System.out.println("out of floor loop 2");
 
 //
 //        for (int i = 0; i < eventArrayList.size() ; i++) {
@@ -311,6 +315,9 @@ public class FloorSubsystem extends Thread {
 //                e.printStackTrace();
 //            }
 //        }
+
+
+         
 
 
         System.out.println("Floor subsystem pre Loop check ");
@@ -325,8 +332,10 @@ public class FloorSubsystem extends Thread {
                 // scheduler.stopElevatorAtFloor(floors.get(i).getElevators().get(0),floors.get(i).getFloorNumber() );
 
                 System.out.println("Stop elevator from sensor");
-            } else {
-            }
+            } 
+              else{}
+
+
         }
 
 

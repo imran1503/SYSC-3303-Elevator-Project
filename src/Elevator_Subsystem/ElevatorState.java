@@ -39,7 +39,7 @@ public enum ElevatorState {
 	
 	LOADING {
 		@Override
-		ElevatorState goTo(Elevator e, int floor) {
+		synchronized ElevatorState goTo(Elevator e, int floor) {
 			System.out.println("Elevator load f(x)");
 	        while(e.getIsMoving()){
 	            try {
