@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
-public class FloorSubsystem extends Thread{
+public class FloorSubsystem extends Thread {
     private final BufferedReader file;
     private ArrayList<Floor> floors;
     static DatagramPacket ackPacket;
@@ -24,17 +24,20 @@ public class FloorSubsystem extends Thread{
     DatagramSocket receiveServerSocket;
 
     private final ArrayList<Event> eventArrayList;
+    int fault;
 
     /**
      * Creates an arraylist of floors and Initializes send and receive
      * Sockets for the scheduler and elevator
      *
+     * @param floorArrayList
      * @param file
      */
-    public FloorSubsystem(ArrayList<Floor> floorArrayList, BufferedReader file) {
+    public FloorSubsystem(ArrayList<Floor> floorArrayList, BufferedReader file) throws SocketException {
         floors = new ArrayList<>();
-        floors= floorArrayList;
+        floors = floorArrayList;
         this.file = file;
+        int fault = 0;
         this.eventArrayList = new ArrayList<>();
         try {
             sendElevatorSocket = new DatagramSocket();
@@ -57,37 +60,37 @@ public class FloorSubsystem extends Thread{
         long milliseconds = 0;
         String[] st = str.split(":");
 
-        milliseconds += Long.valueOf(st[0]) * 60 * 60 *1000;
+        milliseconds += Long.valueOf(st[0]) * 60 * 60 * 1000;
         milliseconds += Long.valueOf(st[1]) * 60 * 1000;
         milliseconds += Long.valueOf(st[2].substring(0, st[2].indexOf("."))) * 1000;
-        milliseconds += Long.valueOf(st[2].substring(st[2].indexOf(".")+1));
+        milliseconds += Long.valueOf(st[2].substring(st[2].indexOf(".") + 1));
 
         return milliseconds;
     }
 
 
-
     /**
-     * Change string elevator directions into an Event. 
-     * 
+     * Change string elevator directions into an Event.
      *
      * @param line
      * @return event
-     */    
-    public Event readEvent(String line){
+     */
+    public Event readEvent(String line) {
         Event event;
         Timestamp timestamp;
         int floorNumber, carButton, direction;
         FloorButton floorButton = null;
-        boolean valid  = true;
+        boolean valid = true;
 
         String[] words = line.split(" ");
+        fault = Integer.parseInt(words[4]);
+        System.out.println("Fault is: " + fault);
         timestamp = new Timestamp(timeToMilliseconds(words[0]));
         floorNumber = Integer.parseInt(words[1]);
         direction = words[2].toLowerCase().equals("up") ? 1 : 0;
 
-        if(floors.get(floorNumber).getButtons().size() == 2) {
-            if ( words[2].toLowerCase().equals("up")) {
+        if (floors.get(floorNumber).getButtons().size() == 2) {
+            if (words[2].toLowerCase().equals("up")) {
                 floorButton = floors.get(floorNumber).getButtons().get(1);
 
             } else {
@@ -98,23 +101,23 @@ public class FloorSubsystem extends Thread{
         }
 
         carButton = Integer.parseInt(words[3]);
-        
 
-        event = new Event(timestamp,floorNumber,floorButton,carButton);
-        
-        if(floorNumber < 0 || floorNumber > 22 || carButton < 0 || carButton > 22) {
-        	valid = false;
+
+        event = new Event(timestamp, floorNumber, floorButton, carButton);
+
+        if (floorNumber < 0 || floorNumber > 22 || carButton < 0 || carButton > 22) {
+            valid = false;
         }
-        
-        if(direction == 0) {
-        	if(carButton > floorNumber) {
-        		valid = false;
-        	}
+
+        if (direction == 0) {
+            if (carButton > floorNumber) {
+                valid = false;
+            }
         } else if (direction == 1) {
-        	if(carButton < floorNumber) {
-        		valid = false;
-        	}
-		}
+            if (carButton < floorNumber) {
+                valid = false;
+            }
+        }
 
         event.setValidity(valid);
         System.out.println("is Event valid?   " + event.isValid());
@@ -139,7 +142,7 @@ public class FloorSubsystem extends Thread{
             floorLamps.add(templamp1);
 
             for (int j = 0; j < elevators.size(); j++) {
-                ArrivalSensor sensor = new ArrivalSensor(elevators.get(i).getId(), i,j);
+                ArrivalSensor sensor = new ArrivalSensor(elevators.get(i).getId(), i, j);
                 arrivalSensors.add(sensor);
             }
         }
@@ -163,7 +166,6 @@ public class FloorSubsystem extends Thread{
 
 
     /**
-     *
      * This method creates a packet of the floor events
      *
      * @param packetID
@@ -173,50 +175,50 @@ public class FloorSubsystem extends Thread{
     public DatagramPacket createPacket(int packetID) throws IOException {
         System.out.println("DEBUG >> In create Packet for making a event");
         DatagramPacket tempPacket;
-        byte[] tempByteArray = new byte[8];
+        byte[] tempByteArray = new byte[9];
         byte[] ack = "acknowledgment".getBytes();
 
 
-        if(packetID == 0){
+        if (packetID == 0) {
             //This will create a packet for each event.
 
-            while (file != null && file.ready()){
+            while (file != null && file.ready()) {
                 Event event = readEvent(file.readLine());
                 eventArrayList.add(event);
                 System.out.println("In floor while loop for reading in packets");
             }
 
             tempByteArray[0] = (byte) 0;
-            tempByteArray[1] = (byte) ( eventArrayList.get(0).getFloorNumber());
+            tempByteArray[1] = (byte) (eventArrayList.get(0).getFloorNumber());
             tempByteArray[2] = (byte) (0);
-            tempByteArray[3] = (byte) ( eventArrayList.get(0).getFloorButton().getDirection());
+            tempByteArray[3] = (byte) (eventArrayList.get(0).getFloorButton().getDirection());
             tempByteArray[4] = (byte) (0);
-            tempByteArray[5] = (byte) ( eventArrayList.get(0).getCarButton());
+            tempByteArray[5] = (byte) (eventArrayList.get(0).getCarButton());
             tempByteArray[6] = (byte) (0);
-            
-            if(!eventArrayList.get(0).isValid()) {
-            	tempByteArray[7] = (byte) (1);
+
+            if (!eventArrayList.get(0).isValid()) {
+                tempByteArray[7] = (byte) (1);
             } else {
-            	tempByteArray[7] = (byte) (2);
-			}
-            
-            
+                tempByteArray[7] = (byte) (2);
+            }
+            tempByteArray[8] = (byte) fault;
+
+
             System.out.println("DEBUG >> CreatePacketTest");
-            for(int i = 0; i < tempByteArray.length; i++){
+            for (int i = 0; i < tempByteArray.length; i++) {
                 System.out.print(tempByteArray[i]);
 
             }
             System.out.println();
             tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5003);
             return tempPacket;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
+
     /**
-     *
      * This method creates a packet for stopping an elevator
      *
      * @param elevatorIndex
@@ -231,7 +233,7 @@ public class FloorSubsystem extends Thread{
         byte[] ack = "acknowledgment".getBytes();
 
 
-            //This will create a packet for each event.
+        //This will create a packet for each event.
 
 //            while (file != null && file.ready()) {
 //                //scheduler.setAvailable(true);
@@ -248,44 +250,43 @@ public class FloorSubsystem extends Thread{
 //                }
 //            }
 
-            tempByteArray[0] = (byte) elevatorIndex;
-            tempByteArray[1] = (byte) (0);
+        tempByteArray[0] = (byte) elevatorIndex;
+        tempByteArray[1] = (byte) (0);
 
-            tempByteArray[2] = (byte) floorNum;
-            tempByteArray[3] = (byte) (0);
-            
+        tempByteArray[2] = (byte) floorNum;
+        tempByteArray[3] = (byte) (0);
+        tempByteArray[4] = (byte) fault;
 
-            tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5002);
-            return tempPacket;
+
+        tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5002);
+        return tempPacket;
 
     }
 
 
     /**
-     *
      * Sends created event packets to the scheduler.
-     *
      */
     public void run() {
         System.out.println("DEBUG >> Run method");
         try {
             // Sends Create packet to scheduler
             byte[] temp = createPacket(0).getData();
-            System.out.println("DEBUG >> run temp length: "  + temp.length);
+            System.out.println("DEBUG >> run temp length: " + temp.length);
             System.out.println("DEBUG >> CreatePacketTest");
-            for(int i = 0; i < temp.length; i++){
+            for (int i = 0; i < temp.length; i++) {
                 System.out.print(temp[i]);
             }
             System.out.println();
 
-            sendServerSocket.send(  createPacket(0));
+            sendServerSocket.send(createPacket(0));
 
 
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             exception.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.print("-");
         }
-        catch (ArrayIndexOutOfBoundsException e){System.out.print("-");}
 
 
         try {
@@ -295,8 +296,7 @@ public class FloorSubsystem extends Thread{
 
             receiveServerSocket.receive(receiveServerPacket);
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("out of floor loop");
@@ -315,18 +315,18 @@ public class FloorSubsystem extends Thread{
 
         System.out.println("Floor subsystem pre Loop check ");
         for (int i = 0; i < floors.size(); i++) {
-            if(floors.get(i).getArrivalSensors().get(i).getArrivalSensorData(sendElevatorSocket)){
+            if (floors.get(i).getArrivalSensors().get(i).getArrivalSensorData(sendElevatorSocket)) {
 
                 try {
-                    createPacket(floors.get(i).getElevators().get(0).getId(), floors.get(i).getFloorNumber() );
+                    createPacket(floors.get(i).getElevators().get(0).getId(), floors.get(i).getFloorNumber());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-               // scheduler.stopElevatorAtFloor(floors.get(i).getElevators().get(0),floors.get(i).getFloorNumber() );
+                // scheduler.stopElevatorAtFloor(floors.get(i).getElevators().get(0),floors.get(i).getFloorNumber() );
 
                 System.out.println("Stop elevator from sensor");
+            } else {
             }
-            else{}
         }
 
 
