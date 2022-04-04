@@ -447,7 +447,7 @@ public class Scheduler extends Thread {
 
         byte[] floordata;
         floordata = recieveFloorPacket.getData();
-        fault = floordata[8];
+        fault = floordata[7];
         System.out.print("DEBUG >> Data Recieved from F.SS:");
         for(int i = 0; i < floordata.length; i++){
             System.out.print(floordata[i]);

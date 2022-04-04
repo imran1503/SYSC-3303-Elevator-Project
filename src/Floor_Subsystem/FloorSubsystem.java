@@ -271,7 +271,7 @@ public class FloorSubsystem extends Thread {
      */
     public void run() {
         System.out.println("DEBUG >> Run method");
-        try{
+        try {
 
             while (true) {
                 // Sends Create packet to scheduler
@@ -284,7 +284,7 @@ public class FloorSubsystem extends Thread {
                 System.out.println();
 
                 sendServerSocket.send(createPacket(0));
-                long sendCp =  System.nanoTime();
+                long sendCp = System.nanoTime();
                 System.out.println("Timing of send cp " + sendCp);
                 //ASK ELEVATORS WHERE THEY ARE
 
@@ -300,7 +300,9 @@ public class FloorSubsystem extends Thread {
                 System.out.println("out of floor loop 1");
 
 
-        } catch (IOException e) {
+            }
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("out of floor loop 2");

@@ -568,7 +568,7 @@ public class ElevatorSubsystem extends Thread{
 
 
                 byte[] serverData = recieveServerPacket.getData();
-                fault = serverData[8];
+                fault = serverData[7];
 
                 System.out.print("DEBUG >> Data Received from S.SS:");
 
