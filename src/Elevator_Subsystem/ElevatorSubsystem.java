@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -509,6 +510,27 @@ public class ElevatorSubsystem extends Thread {
 
     }
 
+    public byte[] codeGUIMSG(){
+        byte[] msg = new byte[100];
+        msg[0] = 0;
+        for(int i = 0;i<elevators.size(); i++){
+            msg[i*24+1] = (byte) elevators.get(i).getCurrentFloor();
+            if(elevators.get(i).getDoor().getDoorsOpen()){
+                msg[i*24+1+1] = 1;
+            }else{
+                msg[i*24+1+1] = 0;
+            }
+            for(int j=0;j<22;j++){
+                if(elevators.get(i).getButtons().get(j).getPressed()){
+                    msg[i*24+j+3] = 1;
+                }else{
+                    msg[i*24+j+3] = 0;
+                }
+            }
+        }
+        return  msg;
+    }
+
     public int getFault() {
         return fault;
     }
@@ -525,10 +547,10 @@ public class ElevatorSubsystem extends Thread {
 
         System.out.println("Elevator SS Starting ...");
         //initialize elevators
-        Elevator e1 = new Elevator(1, 3);
-        Elevator e2 = new Elevator(2, 3);
-        Elevator e3 = new Elevator(3, 3);
-        Elevator e4 = new Elevator(4, 3);
+        Elevator e1 = new Elevator(1, 22);
+        Elevator e2 = new Elevator(2, 22);
+        Elevator e3 = new Elevator(3, 22);
+        Elevator e4 = new Elevator(4, 22);
 
         //create elevator list
         ArrayList<Elevator> elevators = new ArrayList<>();
@@ -562,6 +584,30 @@ public class ElevatorSubsystem extends Thread {
         byte[] msgFromServer = new byte[8];
         recieveServerPacket = new DatagramPacket(msgFromServer, msgFromServer.length);
 
+        //GUI
+        Thread GUI = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] msg;
+                DatagramSocket sendSocket = null;
+                try {
+                    sendSocket = new DatagramSocket();
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+                while(true) {
+                    msg = codeGUIMSG();
+                    try {
+                        DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), 4000);
+                        sendSocket.send(packet);
+                    }catch(IOException e){
+                        System.out.println(e);
+                    }
+                }
+
+            }
+        });
+        GUI.start();
         //Start the timer
         start = System.nanoTime();
 
