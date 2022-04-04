@@ -84,11 +84,11 @@ public class GUI extends Application {
         for(int i =0;i<elevators.size();i++){
             elevators.get(i).setFloor(msg[i*24+1]);
             elevators.get(i).updateDoor(msg[i*24+1+1]);
-            for(int j=0;j<2;j++){
+            for(int j=0;j<22;j++){
                 if(msg[i*24+3+j] == 1){
                     panels.get(i).pressButton(j);
                 }else if(msg[i*24+3+j] == 0){
-                    panels.get(i).pressButton(j);
+                    panels.get(i).clearButton(j);
                 }
             }
         }
@@ -97,12 +97,12 @@ public class GUI extends Application {
         for(int i =0;i<22;i++){
             if(msg[i*2+1]==1) {
                 floors.get(i).up.turnOn();
-            }else{
+            }else if(msg[i*2+1]==0){
                 floors.get(i).up.turnOff();
             }
             if(msg[i*2+2] == 1){
                 floors.get(i).down.turnOn();
-            }else{
+            }else if(msg[i*2+2] == 0){
                 floors.get(i).down.turnOff();
             }
         }

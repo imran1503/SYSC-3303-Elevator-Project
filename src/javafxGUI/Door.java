@@ -26,7 +26,7 @@ public class Door {
 
     public void open(){
         leftDoor.setX(x-10);
-        rightDoor.setX(x+30);
+        rightDoor.setX(x+20);
 
     }
 
