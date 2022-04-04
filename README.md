@@ -80,8 +80,8 @@ the project will run and in order to know when it has completed, it will reveal 
 no more events that can be run at the time. 
 
 Run the subsystems in the following order:
-1. GUI.java
-2. ElevatorSubsystem.java
+1. ElevatorSubsystem.java 
+2. GUI.java
 3. Scheduler.java
 4. FloorSubsystem.java
 
