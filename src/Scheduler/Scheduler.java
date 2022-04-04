@@ -64,9 +64,9 @@ public class Scheduler extends Thread {
 
     /**
      * Door opens to either receive or dismiss users for a certain time frame, and then closes the door
-     *Communcates its instructions to the elevator, allowing it to preform them.
+     *Communicates its instructions to the elevator, allowing it to perform them.
      *
-     * It sends the data as byte arrays inside DatagramPackets sent bv DatagramSockets.
+     * It sends the data as byte arrays inside DatagramPackets sent by DatagramSockets.
      *
      * @param elevatorId is the elevator being interacted with.
      * @param dest is the destination being added.
@@ -413,12 +413,12 @@ public class Scheduler extends Thread {
 
 
     /**
-     * This function takes in a event datagrampacket that is sent over a datagramSocket,
+     * This function takes in a event datagramPacket that is sent over a datagramSocket,
      * decodes that event into another array which it can interact with it, and sends the information required
      * to elevator that is required, such as sending one of the elevator its next destination.
      *
      * It also goes through the possible elevators, and gets their data over the sockets in order to determine which elevator would
-     * have the most efficent method of accepting the floor's call.
+     * have the most efficient method of accepting the floor's call.
      * @return
      */
     public int receiveFloor(){
@@ -690,8 +690,8 @@ public class Scheduler extends Thread {
      * This is the helper method created to simplify sending data to the elevator subsystem since we are doing it everywhere on multiple
      * occasions.
      * @param selectedElevator is the elevator id (and index in the Elevator subsystems list) for easy referencing.
-     * @param info is the byte array data that you would like to insert into a datagrampacket and by extension, the datagramSocket.
-     * @throws UnknownHostException Can be caused if the localhost is not congifured correctly.
+     * @param info is the byte array data that you would like to insert into a datagramPacket and by extension, the datagramSocket.
+     * @throws UnknownHostException Can be caused if the localhost is not configured correctly.
      * @throws InterruptedException can be caused if threads are able to cause a deadlock.
      */
     public int sendElevator(int selectedElevator, byte[] info) throws UnknownHostException, InterruptedException {

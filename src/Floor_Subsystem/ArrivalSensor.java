@@ -60,10 +60,10 @@ public class ArrivalSensor {
 	}
 
 	/**
-	 *
+	 * gets arrival sensor data
+	 * @param socket
 	 * @return
 	 */
-	// Send Scheduler info to the floor instead of using scheduler class
 	public Boolean getArrivalSensorData(DatagramSocket socket){
 		byte[] destinations = new byte[23];
 

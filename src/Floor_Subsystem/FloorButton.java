@@ -63,8 +63,4 @@ public class FloorButton {
         this.floorNumber = floorNumber;
     }
 
-    //TODO
-    public void pressButton(){
-
-    }
 }

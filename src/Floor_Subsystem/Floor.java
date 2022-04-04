@@ -9,8 +9,6 @@ import Scheduler.*;
 
 public class Floor {
 
-
-    //TODO private Time time;
     private int floorNumber;
     private ArrayList<Elevator> elevators;
     private ArrayList<FloorButton> buttons;

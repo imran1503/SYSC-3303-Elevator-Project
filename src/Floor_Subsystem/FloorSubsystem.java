@@ -27,7 +27,7 @@ public class FloorSubsystem extends Thread {
     int fault;
 
     /**
-     * Creates an arraylist of floors and Initializes send and receive
+     * Creates an array list of floors and Initializes send and receive
      * Sockets for the scheduler and elevator
      *
      * @param floorArrayList
@@ -55,7 +55,12 @@ public class FloorSubsystem extends Thread {
         return file;
     }
 
-    // read time in "hh:mm:ss.mmm" format and convert it to milliseconds
+    
+    /**
+     * read time in "hh:mm:ss.mmm" format and convert it to milliseconds
+     * @param str
+     * @return
+     */
     public long timeToMilliseconds(String str) {
         long milliseconds = 0;
         String[] st = str.split(":");

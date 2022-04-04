@@ -213,6 +213,11 @@ public class Elevator  {
         }
     }
 
+    /**
+     * Moves to the specified direction
+     * @param direction
+     * @throws InterruptedException
+     */
     public synchronized void move(int direction) throws InterruptedException {
         setDirection(direction);
         this.direction=direction;

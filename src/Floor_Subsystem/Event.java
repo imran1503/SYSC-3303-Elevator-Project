@@ -18,7 +18,7 @@ public class Event {
 	private boolean validEvent;
 	
 	/**
-	* Initialzes an event based on the timestamp, the floorNumber, floorButton, elevatorId
+	* Initializes an event based on the time stamp, the floorNumber, floorButton, elevatorId
 	* @param timestamp, floorNumber, floorButton, elevatorId
 	*/
 	public Event(Timestamp timestamp, int floorNumber, FloorButton floorButton, int carButton) {
@@ -30,8 +30,8 @@ public class Event {
 	}
 	
 	/**
-	* Returns the timestamp of the event
-	* @return timestamp
+	* Returns the time stamp of the event
+	* @return time stamp
 	*/
 	
 	public Timestamp getTimestamp() {
