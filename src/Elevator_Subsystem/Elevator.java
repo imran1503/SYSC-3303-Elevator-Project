@@ -43,7 +43,7 @@ public class Elevator  {
         this.id = id;
         this.motor = new ElevatorMotor(0.29947, 0.0032,0.50);
         isMoving = false;
-        this.currentFloor = 1;
+        this.currentFloor = 2;
         this.numFloorTotal = amountOfFloorsInBuilding;
         lastButtonPressed=-1;
         this.destination = 0;
