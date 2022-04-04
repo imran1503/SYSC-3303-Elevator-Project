@@ -1,6 +1,6 @@
 package Elevator_Subsystem;
 
-import Floor_Subsystem.*;
+import Floor_Subsystem.Floor;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -502,6 +502,14 @@ public class ElevatorSubsystem extends Thread{
 
     }
 
+    public int getFault() {
+        return fault;
+    }
+
+    public void setFault(int fault) {
+        this.fault = fault;
+    }
+
     public static void main(String[] args) {
         System.out.println("Elevator SS Starting ...");
         //initialize elevators
@@ -560,6 +568,7 @@ public class ElevatorSubsystem extends Thread{
 
 
                 byte[] serverData = recieveServerPacket.getData();
+                fault = serverData[8];
 
                 System.out.print("DEBUG >> Data Received from S.SS:");
 
