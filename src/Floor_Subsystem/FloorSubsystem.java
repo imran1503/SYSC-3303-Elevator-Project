@@ -3,10 +3,7 @@ package Floor_Subsystem;
 import Elevator_Subsystem.Elevator;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -284,11 +281,52 @@ public class FloorSubsystem extends Thread {
 
     }
 
+    public byte[] codeGUIMSG(){
+        byte[] msg = new byte[45];
+        msg[0] = 1;
+        for(int i =0;i<floors.size();i++){
+            if(floors.get(i).getButtons().get(0).getPressed()){
+                msg[i*2+1] = 1;
+            }else{
+                msg[i*2+1] = 0;
+            }
+            if(floors.get(i).getButtons().get(1).getPressed()){
+                msg[i*2+1+1] = 1;
+            }else{
+                msg[i*2+1+1] = 0;
+            }
+        }
+        return msg;
+    }
+
 
     /**
      * Sends created event packets to the scheduler.
      */
     public void run() {
+        Thread GUI = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] msg;
+                msg = codeGUIMSG();
+                DatagramSocket socket = null;
+                try {
+                    socket = new DatagramSocket();
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+                while(true){
+                    DatagramPacket packet = null;
+                    try {
+                        packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(),4000);
+                        socket.send(packet);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
         if (debug) {System.out.println("DEBUG >> Run method");}
         System.out.println("Floor Subsystem Activated.");
         try {
