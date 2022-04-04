@@ -1,5 +1,10 @@
 package Elevator_Subsystem;
 
+import Floor_Subsystem.ArrivalSensor;
+import Floor_Subsystem.FloorButton;
+import Floor_Subsystem.FloorLamp;
+import Scheduler.Scheduler;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.io.ObjectInputStream;
@@ -37,11 +42,14 @@ class ElevatorSubsystemTest {
 
         ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
 
-        byte[] tempByteArray = new byte[4];
+        byte[] tempByteArray = new byte[5];
         tempByteArray[0] = 0;
         tempByteArray[1] = 0;
         tempByteArray[2] = 1;
         tempByteArray[3] = 0;
+        tempByteArray[4] = 1; // Fault
+
+
 
         DatagramPacket test = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5000);
 
@@ -50,6 +58,41 @@ class ElevatorSubsystemTest {
         assertNotEquals(0, elevatorSS.elevatorAction(test));
         assertNotEquals(-1, elevatorSS.elevatorAction(test));
 
+
+    }
+
+    public void setFault(int fault) {
+
+        ArrayList<FloorLamp> floorLamps = new ArrayList<>();
+        ArrayList<FloorButton> floorButtons = new ArrayList<>();
+        ArrayList<ArrivalSensor> arrivalSensors = new ArrayList<>();
+        ArrayList<ElevatorLamp> elevatorLamps = new ArrayList<>();
+        ArrayList<ElevatorButton> elevatorButtons = new ArrayList<>();
+        ElevatorDoor elevatorDoor = new ElevatorDoor();
+        ElevatorMotor elevatorMotor = new ElevatorMotor(0.29947, 0.0032, 0.50);
+        for (int i = 0; i < 22; i++) {
+            ElevatorLamp temp = new ElevatorLamp(i);
+            ElevatorLamp temp2 = new ElevatorLamp(i);    // Showing dir(elevator) up/down
+            elevatorLamps.add(temp);
+            elevatorLamps.add(temp2);
+
+
+            ElevatorButton tempButton = new ElevatorButton(i);
+            elevatorButtons.add(tempButton);
+
+
+        }
+
+        Scheduler scheduler = new Scheduler();
+        ArrayList<Elevator> elevators = new ArrayList<>();
+        ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
+
+        Elevator elevator = new Elevator(0, elevatorButtons, elevatorLamps, elevatorMotor, elevatorDoor, 3, ElevatorState.IDLE, fault);
+        elevators.add(elevator);
+
+        // Testing Faults
+        elevatorSS.setFault(2);
+        Assert.assertEquals(elevatorSS.getFault(), 0);
 
     }
 }
