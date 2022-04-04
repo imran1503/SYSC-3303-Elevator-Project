@@ -60,11 +60,18 @@ and continues to stay active until the elevator stops and there are no events to
 We created 2 sockets to communicate with the other subsytems, one for sending and one for receiving.
 It encodes the required actions and send them to the corresponding subsystem which then decodes and perform the reuired actions
 
+### GUI
+The GUI package contains several components used to display elevator system.
+GUI has a thread that constantly receives message from elevator subsystem and floor subsystem to update display.
+GUI needs to be run to display elevator system.
+GUITest is a test that passes some message to GUI to test if the GUI works(it need to be run after GUI so GUI can receive the messages). 
+
 
 ### Issues
 1. An issue that has been facing is the fact that when our scheduler completes all of its tasks,
    it prints out that there are no more events on a continuous loop. 
 2. Facing IndexOutOfBoundsException at the end of the program
+3. JavaFx is not included in Java 11. IDE need to be set up to use JavaFx. 
 
 ### Set-Up Instructions
 In order to run the program, run each of the subsystem's Main class as a Java application in the order provided below. Make sure that 
@@ -73,7 +80,8 @@ the project will run and in order to know when it has completed, it will reveal 
 no more events that can be run at the time. 
 
 Run the subsystems in the following order:
-1. ElevatorSubsystem.java
-2. Scheduler.java
-3. FloorSubsystem.java
+1. GUI.java
+2. ElevatorSubsystem.java
+3. Scheduler.java
+4. FloorSubsystem.java
 
