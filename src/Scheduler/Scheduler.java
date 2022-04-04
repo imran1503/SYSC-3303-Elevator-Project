@@ -748,6 +748,8 @@ public class Scheduler extends Thread {
         // Get interrupted when : Floor calls elevator through scheduler;     elevatorButton pressed to add destination;
         // after  planElevatorTrip() scheduling, set elevator.isEvent = true
         //  this.schedulerState.change(elevatorIndex, this);
+        long start = System.nanoTime();
+
         Boolean run = true;
         while (run) {
             try {
@@ -843,6 +845,10 @@ public class Scheduler extends Thread {
 
                 }
                 else{
+                    long end = System.nanoTime();
+                    long total = end - start;
+
+                    System.out.println("Total time of the scheduler: " + total / Math.pow(10,9) + " s");
                     run = false;
                 }
             }
