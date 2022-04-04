@@ -30,7 +30,10 @@ public class Scheduler extends Thread {
     ArrayList<Floor> floorArrayList;
     ArrayList<Integer> elevatorList;
     int elevatorIndex;
+    int fault;
     private static final long expectedTime = 950000000; //expected time of elevator reaching its destination
+
+
 
     /**
      * This creates a new scheduler that initalizes all the ports required for it to
@@ -145,7 +148,7 @@ public class Scheduler extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-   
+
     }
 
 
@@ -194,7 +197,6 @@ public class Scheduler extends Thread {
         data[4] = (byte)floorNum;
 
         try {
-            System.out.println("Line 198 Send Elevator");
             sendElevator(elevatorId, data);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -253,6 +255,8 @@ public class Scheduler extends Thread {
             sendElevator(elevatorId, dataStopElevator);
         } catch (UnknownHostException | InterruptedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         //TODO send packet to tell elevator to change variables to correct state
@@ -298,7 +302,7 @@ public class Scheduler extends Thread {
         byte[] dests = recieveElevatorPacket.getData();
 
         openDoor(elevatorId, dests[0]); //TODO Verify this
-        
+
 
         byte[] dataremove = new byte[3];
         dataremove[0] = (byte) elevatorId;
@@ -320,9 +324,9 @@ public class Scheduler extends Thread {
 
 
     }
-    
-    
-    
+
+
+
 
 //   NOT NEEDED BUT DON'T REMOVE, FOUNDATION OF IDEAS TO UNDERSTAND EVERYTHING
 
@@ -359,7 +363,7 @@ public class Scheduler extends Thread {
 
 
         	//eleIndex = data[0], data[1] = 0, data[2]=10, data[3] = 0
-        	
+
         	//Need to get the elevator isMoving
 
             byte[] data = new byte[3];
@@ -385,7 +389,7 @@ public class Scheduler extends Thread {
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            
+
             byte[] tempByteDest = new byte[4];
             recieveElevatorPacket = new DatagramPacket(tempByteDest, tempByteDest.length);
             try {
@@ -396,13 +400,13 @@ public class Scheduler extends Thread {
             }
 
             byte[] dataIsMoving = recieveElevatorPacket.getData();
-            
+
             if(dataIsMoving[2] == 1) {
             	goToIdleBoolean = false;
             }
-        	
+
         }
-        
+
         if(goToIdleBoolean) {
         	setSchedulerState(SchedulerState.IDLE_STATE);
         } else {
@@ -442,6 +446,7 @@ public class Scheduler extends Thread {
 
         byte[] floordata;
         floordata = recieveFloorPacket.getData();
+        fault = floordata[8];
         System.out.print("DEBUG >> Data Recieved from F.SS:");
         for(int i = 0; i < floordata.length; i++){
             System.out.print(floordata[i]);
@@ -458,13 +463,13 @@ public class Scheduler extends Thread {
 //            try {
 //                System.out.println("Time" + split[0] + "\n" + "Floor number" + split[1] + "\n" + "direction" + elevDirectionS + "\n" + "destination" + elevDestS);
 //            }
-        	
+
         	if(floordata[7] == 1) {
         		System.out.println("\nFault: There is fault in event data provided");
-        		//return -1; //got invalid event data
-        		
+        		return -1; //got invalid event data
+
         	}
-        	
+
             String floorNumberS = null;
             String elevDirectionS = null;
             String elevDestS = null;
@@ -553,6 +558,7 @@ public class Scheduler extends Thread {
                 sendElevator(0, tempDest1); // X05
                 System.out.println("--------------------------");
                 recieveElevatorSocket.receive(recieveElevatorPacket);
+                System.out.println("--------------------------");
                 destinations = recieveElevatorPacket.getData();
 
                 System.out.print("DEBUG >> Setting move packets of elevators in receive floor: destinations: ");
@@ -614,7 +620,7 @@ public class Scheduler extends Thread {
                 }
             }
             System.out.println("DEBUG >>> Request from floor, best elevator: " + bestElevator);
-            byte[] information = new byte[8];
+            byte[] information = new byte[9];
             information[0] =(byte) bestElevator;
             information[1] =(byte) 0;
             information[2] =(byte) 3;
@@ -623,6 +629,7 @@ public class Scheduler extends Thread {
             information[5] =(byte) 0;
             information[6] =(byte) Integer.parseInt(elevDestS);
             information[7] =(byte) 0;
+            information[8] = (byte) fault;
 
             System.out.print("DEBUG >> Setting move packets of elevators in receive floor: information: ");
             for(int i = 0; i < information.length; i++){
@@ -646,7 +653,7 @@ public class Scheduler extends Thread {
             long end = System.nanoTime();
             
             
-            if((end - start) > expectedTime) {
+            if(fault == 3) {
             	System.out.println("Fault detected: Elevetor took more time than expected to reach its destination");
             }
             
@@ -791,6 +798,13 @@ public class Scheduler extends Thread {
 
     }
 
+    public int getFault() {
+        return fault;
+    }
+
+    public void setFault(int fault) {
+        this.fault = fault;
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -810,7 +824,6 @@ public class Scheduler extends Thread {
 
     }
 }
-
 
 
 
