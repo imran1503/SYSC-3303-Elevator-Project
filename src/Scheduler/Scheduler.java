@@ -712,7 +712,7 @@ public class Scheduler extends Thread {
 
                 sendElevatorPacket = new DatagramPacket(info, info.length, InetAddress.getByName("localhost"), 5001);
                 sendElevatorSocket.send(sendElevatorPacket);
-                System.out.println("DEBUG >> Packet sent from SendElevator f(x).");
+                System.out.println("DEBUG >> Packet sent from SendElevator f(x).DEBUG >> Packet sent from SendElevator f(x).");
             } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(1);

@@ -618,10 +618,25 @@ public class ElevatorSubsystem extends Thread{
                             total = end - start;
 
 
+                            if(fault == 1) {
+                                System.out.println("Fault detected: Door is stuck open");
+                            }
+
+
                             if (fault == 2) {
                                 System.out.println("Fault Detected: Took elevator too long to reach destination");
-
                             }
+
+                            if (fault == 3) {
+                                System.out.println("Fault detected: Floor timer exceeded expected time. Elevator will now shut off.");
+                                try {
+                                    wait();
+                                } catch (InterruptedException e1) {
+
+                                }
+                            }
+
+
                         } catch (IndexOutOfBoundsException e) {
                             System.out.println("Elevator " + this.elevators.get(elevatorIndex).getId() + " has no destinations to go to. ");
                             this.elevators.get(elevatorIndex).setEvent(false);
