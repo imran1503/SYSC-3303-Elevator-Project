@@ -328,9 +328,11 @@ public class ElevatorSubsystem extends Thread {
                 int index = 2;
                 if (debug) {
                     System.out.print("DEBUG >>> 005 Req All pos: : ");
-                    for (int i = 0; i < destinations.size(); i++) {
-                        tempByteArray[index++] = destinations.get(i).byteValue();
-                        tempByteArray[index++] = (byte) 0;
+                }
+                for (int i = 0; i < destinations.size(); i++) {
+                    tempByteArray[index++] = destinations.get(i).byteValue();
+                    tempByteArray[index++] = (byte) 0;
+                    if (debug) {
                         System.out.print(tempByteArray[index]);
                     }
                     System.out.print("");

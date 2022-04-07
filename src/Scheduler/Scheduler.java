@@ -455,7 +455,10 @@ public class Scheduler extends Thread {
 
             }
             System.out.println("");
+            System.out.println("Fault is: " + fault);
         }
+
+
 
         // IF its 8 bytes long, then its a event packet
         if (floordata.length == 8) {

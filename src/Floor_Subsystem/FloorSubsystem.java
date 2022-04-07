@@ -89,6 +89,7 @@ public class FloorSubsystem extends Thread {
 
         String[] words = line.split(" ");
         fault = Integer.parseInt(words[4]);
+
         System.out.println("Fault is: " + fault);
         timestamp = new Timestamp(timeToMilliseconds(words[0]));
         floorNumber = Integer.parseInt(words[1]);
