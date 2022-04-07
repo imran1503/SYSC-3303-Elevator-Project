@@ -12,12 +12,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.*;
 
 public class SchedulerTest {
     private Elevator elevator;
 
-    
+    @Test
     public void stopElevatorAtFloorTest() throws FileNotFoundException {
         ArrayList<FloorLamp> floorLamps = new ArrayList<>();
         ArrayList<FloorButton> floorButtons = new ArrayList<>();
@@ -85,6 +87,7 @@ public class SchedulerTest {
         assertEquals(floor2.getFloorNumber()==2, elevator.getDestinations().get(2));
     }
 
+    @Test
     public void setFault(int fault) {
 
         ArrayList<FloorLamp> floorLamps = new ArrayList<>();
