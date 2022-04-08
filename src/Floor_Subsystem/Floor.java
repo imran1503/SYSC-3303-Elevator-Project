@@ -28,10 +28,10 @@ public class Floor {
         if(floorNumber == 1){
             this.buttons.add(new FloorButton(1,1));
         }else if(floorNumber == amountOfFloorsInBuilding-1){
-            this.buttons.add(new FloorButton(floorNumber, -1));
+            this.buttons.add(new FloorButton(floorNumber, 0));
         }else{
             this.buttons.add(new FloorButton(floorNumber,1));
-            this.buttons.add(new FloorButton(floorNumber, -1));
+            this.buttons.add(new FloorButton(floorNumber, 0));
         }
         this.floorNumber=floorNumber;
         this.lamps=floorLamps;
@@ -39,7 +39,7 @@ public class Floor {
         this.arrivalSensors = arrivalSensors;
     }
 
-	
+
 	public ArrayList<ArrivalSensor> getArrivalSensors() {
 		return arrivalSensors;
 	}
