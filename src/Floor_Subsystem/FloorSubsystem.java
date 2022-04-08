@@ -102,17 +102,16 @@ public class FloorSubsystem extends Thread {
 
         if (floors.get(floorNumber).getButtons().size() == 2) {
             if (words[2].toLowerCase().equals("up")) {
-                floorButton = floors.get(floorNumber).getButtons().get(1);
+                floorButton = floors.get(floorNumber).getButtons().get(0);
 
             } else {
-                floorButton = floors.get(floorNumber).getButtons().get(0);
+                floorButton = floors.get(floorNumber).getButtons().get(1);
             }
         } else if (floors.get(floorNumber).getButtons().size() == 1) {
             floorButton = floors.get(floorNumber).getButtons().get(0);
         }
 
         carButton = Integer.parseInt(words[3]);
-
 
         event = new Event(timestamp, floorNumber, floorButton, carButton);
 
