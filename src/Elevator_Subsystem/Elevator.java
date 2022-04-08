@@ -221,7 +221,7 @@ public class Elevator  {
     public synchronized void move(int direction) throws InterruptedException {
         setDirection(direction);
         this.direction=direction;
-        System.out.println("Move: !move?" + !isMoving);
+        System.out.println("Move: move?" + isMoving);
         System.out.println("dir: " + this.direction);
         while (isMoving) {
             try {
@@ -244,6 +244,8 @@ public class Elevator  {
             wait(500);
             setMoving(true);
             getMotor().setMoving(true);
+            System.out.println("After move: move?" + isMoving);
+            System.out.println("dir: " + this.direction);
         }
         catch (InterruptedException e){}
 

@@ -199,6 +199,7 @@ public class FloorSubsystem extends Thread {
      * @throws IOException
      */
     public DatagramPacket createPacket(int packetID) throws IOException {
+    	if(packetID >= eventArrayList.size()) return null;
         if (debug) {System.out.println("DEBUG >> In create Packet for making a event");}
         DatagramPacket tempPacket;
         byte[] tempByteArray = new byte[9];
@@ -263,7 +264,7 @@ public class FloorSubsystem extends Thread {
         byte[] tempByteArray = new byte[4];
         byte[] ack = "acknowledgment".getBytes();
 
-
+ 
         //This will create a packet for each event.
 
 //            while (file != null && file.ready()) {
@@ -344,9 +345,17 @@ public class FloorSubsystem extends Thread {
         System.out.println("Floor Subsystem Activated.");
         try {
         	int index = 0;
-            while (index < eventArrayList.size()) {
+        	if(debug) {
+        		System.out.println("*********events size = " + eventArrayList.size());
+        	}
+            while (true) {
                 // Sends Create packet to scheduler
-                byte[] temp = createPacket(index).getData();
+//            	System.out.println("*********Index = " + index);
+            	DatagramPacket packetToSend = createPacket(index);
+            	//TODO: check arrival sensor
+            	
+            	if(packetToSend == null) continue;
+                byte[] temp = packetToSend.getData();
                 if (debug) {
                     System.out.println("DEBUG >> run temp length: " + temp.length);
                     System.out.println("DEBUG >> CreatePacketTest");
@@ -355,8 +364,9 @@ public class FloorSubsystem extends Thread {
                     }
                     System.out.println();
                 }
+                System.out.println("*********Sending created packet ");
 //                sendServerSocket.send(createPacket(0));
-                sendServerSocket.send(createPacket(index));
+                sendServerSocket.send(packetToSend);
                 long sendCp = System.nanoTime();
                 System.out.println("Timing of send cp " + sendCp);
                 //ASK ELEVATORS WHERE THEY ARE
@@ -366,9 +376,9 @@ public class FloorSubsystem extends Thread {
                 byte[] ack = "Acknowledgement".getBytes();
                 receiveServerPacket = new DatagramPacket(ack, ack.length);//empty packet created
 
-
-                receiveServerSocket.receive(receiveServerPacket);
-
+                System.out.println("*****Before receiveServerSocket");
+//                receiveServerSocket.receive(receiveServerPacket);
+                System.out.println("*****After receiveServerSocket");
 
                 if (debug) { System.out.println("out of floor loop 1");}
 

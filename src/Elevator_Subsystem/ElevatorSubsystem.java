@@ -294,9 +294,11 @@ public class ElevatorSubsystem extends Thread {
                 long startMove = System.nanoTime();
 
                 try {
+                	elevators.get(elevatorIndex).addDestinations(data[6]);
+                	planElevatorTrip(elevators.get(elevatorIndex).getId());
                     elevators.get(elevatorIndex).move(data[4]);
-                    elevators.get(elevatorIndex).addDestinations(data[6]);
-                    planElevatorTrip(elevators.get(elevatorIndex).getId());
+//                    elevators.get(elevatorIndex).addDestinations(data[6]);
+//                    planElevatorTrip(elevators.get(elevatorIndex).getId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
