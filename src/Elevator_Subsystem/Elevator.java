@@ -1,10 +1,10 @@
 package Elevator_Subsystem;
 
 import Floor_Subsystem.Floor;
-import Scheduler.Scheduler;
-//import Elevator_Subsystem.*;
 
 import java.util.ArrayList;
+
+//import Elevator_Subsystem.*;
 
 public class Elevator  {
     private ArrayList<ElevatorButton> buttons;
@@ -221,12 +221,12 @@ public class Elevator  {
     public synchronized void move(int direction) throws InterruptedException {
         setDirection(direction);
         this.direction=direction;
-        System.out.println("Move: !move?" + !isMoving);
+        System.out.println("Move: move?" + isMoving);
         System.out.println("dir: " + this.direction);
         while (isMoving) {
             try {
-                wait(500);
-
+                wait(50);
+                System.out.println("DEBUG >> In Move Wait Loop~~~");
             } catch (InterruptedException e) {
                 System.err.print(e);
                 e.printStackTrace();
@@ -242,8 +242,10 @@ public class Elevator  {
                 currentFloor--;
             }
             wait(500);
-            setMoving(true);
+            //setMoving(true);
             getMotor().setMoving(true);
+            System.out.println("After move: move?" + isMoving);
+            System.out.println("dir: " + this.direction);
         }
         catch (InterruptedException e){}
 
@@ -258,6 +260,7 @@ public class Elevator  {
      * @param floor
      */
     public synchronized void stopAt(int floor) {
+        System.out.println("DEBUG >> at stopAt method");
         while (isMoving) {
             try {
                 wait();
@@ -267,7 +270,7 @@ public class Elevator  {
                 e.printStackTrace();
             }
         }
-        System.out.println(" at stopAt method");
+
     }
 
 
