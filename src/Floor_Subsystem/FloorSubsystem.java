@@ -314,6 +314,17 @@ public class FloorSubsystem extends Thread {
     }
 
 
+    public DatagramPacket checkArrivalSensors(){
+        byte[] data = new byte[24];
+
+
+
+
+        DatagramPacket packet =  new DatagramPacket(data, data.length);
+        return packet;
+    }
+
+
     /**
      * Sends created event packets to the scheduler.
      */
@@ -353,7 +364,7 @@ public class FloorSubsystem extends Thread {
 //            	System.out.println("*********Index = " + index);
             	DatagramPacket packetToSend = createPacket(index);
             	//TODO: check arrival sensor
-            	
+            	checkArrivalSensors();
             	if(packetToSend == null) continue;
                 byte[] temp = packetToSend.getData();
                 if (debug) {
@@ -390,6 +401,7 @@ public class FloorSubsystem extends Thread {
         }
         if (debug) {System.out.println("out of floor loop 2");}
 
+//
 //
 //        for (int i = 0; i < eventArrayList.size() ; i++) {
 //            try {

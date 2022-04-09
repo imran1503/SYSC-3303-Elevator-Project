@@ -295,7 +295,9 @@ public class ElevatorSubsystem extends Thread {
 
                 try {
                 	elevators.get(elevatorIndex).addDestinations(data[6]);
+
                 	planElevatorTrip(elevators.get(elevatorIndex).getId());
+                	if (debug){System.out.println("DEBUG >> Planed Elevator Trip.");}
                     elevators.get(elevatorIndex).move(data[4]);
 //                    elevators.get(elevatorIndex).addDestinations(data[6]);
 //                    planElevatorTrip(elevators.get(elevatorIndex).getId());
