@@ -1,5 +1,6 @@
 package javafxGUI;
 
+import com.sun.jdi.ByteValue;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -128,7 +130,13 @@ public class GUI extends Application {
     public void displayFault(byte[] msg, TextArea text){
         System.out.println("fault received");
         String fault = "";
-        double time = msg[2];
+        byte[] num = new byte[8];
+
+        for(int i = 0; i<num.length; i++){
+            num[i] = msg[i+2];
+        }
+        String time = new String(num, StandardCharsets. UTF_8);
+
         if(msg[1] == 1){
             fault = "Fault detected: Door is stuck open (" + time + "s) ";
         }else if(msg[1] == 2){
