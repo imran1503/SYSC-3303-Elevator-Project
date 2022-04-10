@@ -753,10 +753,15 @@ public class Scheduler extends Thread {
         }
 
         public void faultToGUI(int fault, double time){
-            byte[] msg = new byte[3];
+            byte[] msg = new byte[20];
             msg[0] = 2;
             msg[1] = (byte)fault;
-            msg[3] = (byte) time;
+            byte[] num = new byte[8];
+            num = Double.toString(time).getBytes();
+            for(int i =0; i< num.length; i++){
+                msg[i+2] = num[i];
+            }
+
 
             try {
                 DatagramSocket socket = new DatagramSocket();
