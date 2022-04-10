@@ -2,6 +2,7 @@ package javafxGUI;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -46,6 +47,15 @@ public class GUI extends Application {
             panels.add(panel);
         }
 
+        //initialize fault display
+        TextArea fault = new TextArea();
+        fault.setMaxWidth(350);
+        fault.setMaxHeight(80);
+        fault.setLayoutX(20);
+        fault.setLayoutY(700);
+        fault.setEditable(false);
+        layout.getChildren().add(fault);
+
         Thread t = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -63,7 +73,7 @@ public class GUI extends Application {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    updateStatus(msg);
+                    updateStatus(msg, fault);
                 }
             }
         });
@@ -72,11 +82,16 @@ public class GUI extends Application {
     }
 
 
-    public void updateStatus(byte[] msg){
+    public void updateStatus(byte[] msg, TextArea fault){
+        //message is from elevator
         if(msg[0] == 0){
             updateElevator(msg);
-        }else{
+        //message is from floor
+        }else if (msg[0] == 1){
             updateFloor(msg);
+        //message is from scheduler
+        }else if(msg[0] == 2){
+            displayFault(msg, fault);
         }
 
     }
@@ -93,6 +108,8 @@ public class GUI extends Application {
             }
         }
     }
+
+
     public void updateFloor(byte[] msg){
         for(int i =0;i<22;i++){
             if(msg[i*2+1]==1) {
@@ -106,6 +123,22 @@ public class GUI extends Application {
                 floors.get(i).down.turnOff();
             }
         }
+    }
+
+    public void displayFault(byte[] msg, TextArea text){
+        System.out.println("fault received");
+        String fault = "";
+        double time = msg[2];
+        if(msg[1] == 1){
+            fault = "Fault detected: Door is stuck open (" + time + "s) ";
+        }else if(msg[1] == 2){
+            fault = "Fault Detected: Took elevator too long to reach destination (" + time + "s) ";
+        }else if(msg[1] == 3){
+            fault = "Fault detected: Floor timer exceeded expected time. Elevator will now shut off (" + time + "s) ";
+        }
+
+        text.appendText(fault);
+        text.appendText("\n");
     }
 }
 

@@ -77,5 +77,25 @@ public class GUITest {
         }catch(IOException e){
             System.err.println(e);
         }
+
+        byte[] fault = new byte[3];
+        fault[0] = 2;
+        fault[1] = 3;
+        fault[2] = (byte)12.34;
+
+        try{
+            DatagramPacket packet = new DatagramPacket(fault, fault.length, InetAddress.getLocalHost(), 4000);
+            socket = new DatagramSocket();
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+        }catch(IOException e){
+            System.err.println(e);
+        }
     }
 }
