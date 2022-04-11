@@ -22,6 +22,7 @@ public class Elevator  {
     private int lastButtonPressed;
     private int destination;
     private ElevatorState elevatorState;
+    private int fault;
 
     /**
      * Constructor method that initializes an elevator for the scheduler and
@@ -76,6 +77,7 @@ public class Elevator  {
         lastButtonPressed=-1;
         this.destination = 0;
         this.elevatorState = state;
+        this.fault = fault;
     }
 
 
@@ -113,6 +115,14 @@ public class Elevator  {
 
     public void setEvent(Boolean event) {
         isEvent = event;
+    }
+
+    public int getFault() {
+        return fault;
+    }
+
+    public void setFault(int fault) {
+        this.fault = fault;
     }
 
     public int getNumFloorTotal() {

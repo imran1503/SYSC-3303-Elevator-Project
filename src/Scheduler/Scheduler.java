@@ -46,7 +46,10 @@ public class Scheduler extends Thread {
 
             sendFloorSocket = new DatagramSocket();
             recieveFloorSocket = new DatagramSocket(5003);
-        } catch (Exception e) {
+        } catch (java.net.BindException e){
+
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 

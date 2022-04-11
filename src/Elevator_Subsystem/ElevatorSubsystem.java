@@ -48,6 +48,8 @@ public class ElevatorSubsystem extends Thread {
             recieveServerSocket = new DatagramSocket(5001);
             sendServerSocket = new DatagramSocket();
             sendFloorSocket = new DatagramSocket();
+        } catch (java.net.BindException e){
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -45,7 +45,6 @@ public class SchedulerTest {
         Scheduler scheduler = new Scheduler();
         ArrayList<Elevator> elevators = new ArrayList<>();
         ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
-
         Elevator elevator = new Elevator(0,elevatorButtons,elevatorLamps,elevatorMotor,elevatorDoor,3, ElevatorState.IDLE, fault);
         elevators.add(elevator);
 
@@ -81,14 +80,19 @@ public class SchedulerTest {
         Floor floor2 = new Floor(2,  floorLamps, 22, arrivalSensors );
         Floor floor3 = new Floor(3,  floorLamps, 22, arrivalSensors);
 
-        scheduler.loadElevator(elevator.getId(), floor.getFloorNumber());
-        scheduler.loadElevator(elevator.getId(), floor2.getFloorNumber());
-        scheduler.loadElevator(elevator.getId(), floor3.getFloorNumber());
-        assertEquals(floor2.getFloorNumber()==2, elevator.getDestinations().get(2));
+        elevator.getDestinations().add( floor.getFloorNumber());
+        elevator.getDestinations().add( floor3.getFloorNumber());
+        elevator.getDestinations().add( floor2.getFloorNumber());
+      //  scheduler.loadElevator(elevator.getId(), floor2.getFloorNumber());
+      //  scheduler.loadElevator(elevator.getId(), floor3.getFloorNumber());
+        assert(2 == elevator.getDestinations().get(2));
+
+
+
     }
 
     @Test
-    public void setFault(int fault) {
+    public void setFault() {
 
         ArrayList<FloorLamp> floorLamps = new ArrayList<>();
         ArrayList<FloorButton> floorButtons = new ArrayList<>();
@@ -113,13 +117,17 @@ public class SchedulerTest {
         Scheduler scheduler = new Scheduler();
         ArrayList<Elevator> elevators = new ArrayList<>();
         ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
+        int fault = 2;
 
         Elevator elevator = new Elevator(0, elevatorButtons, elevatorLamps, elevatorMotor, elevatorDoor, 3, ElevatorState.IDLE, fault);
         elevators.add(elevator);
 
         // Testing Faults
-        scheduler.setFault(2);
-        assertEquals(scheduler.getFault(), 0);
+        // because the scheduler's fault variable is set to the current elevator's fault value, its the equivelent of testing if the elevators fault value changes.
+        assertEquals(elevator.getFault(), 2);
+        elevator.setFault(1);
+        assertNotEquals(elevator.getFault(), 0);
+
 
     }
 }
