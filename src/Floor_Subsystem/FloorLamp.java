@@ -8,9 +8,9 @@ public class FloorLamp {
     * Initializes the floor lamp of the created floor by obtaining the floorNum
     * @param floornum
     */
-    public FloorLamp(int floornum){
+    public FloorLamp(int floorNumber){
         this.floorNumber=floorNumber;
-        if (floorNumber == 1) {
+        if (this.floorNumber == 1) {
             active=true;
         }
         active=false;

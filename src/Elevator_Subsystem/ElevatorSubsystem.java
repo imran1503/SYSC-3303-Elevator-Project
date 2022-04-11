@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
-public class ElevatorSubsystem extends Thread{
+public class ElevatorSubsystem extends Thread {
     ArrayList<Elevator> elevators;
     DatagramPacket sendFloorPacket;
     DatagramPacket sendServerPacket;
@@ -31,6 +33,7 @@ public class ElevatorSubsystem extends Thread{
     long end;
     long total;
     long timeBetweenFloors = 14500; // In ms
+    private boolean debug;
 
     /**
      * Creates an arraylist of elevators and Initializes receive
@@ -38,13 +41,15 @@ public class ElevatorSubsystem extends Thread{
      *
      * @param elevatorlist
      */
-    public ElevatorSubsystem(ArrayList<Elevator> elevatorlist){
+    public ElevatorSubsystem(ArrayList<Elevator> elevatorlist) {
         elevators = elevatorlist;
         try {
             recieveFloorSocket = new DatagramSocket(5000);
             recieveServerSocket = new DatagramSocket(5001);
             sendServerSocket = new DatagramSocket();
             sendFloorSocket = new DatagramSocket();
+        } catch (java.net.BindException e){
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,10 +60,8 @@ public class ElevatorSubsystem extends Thread{
             e.printStackTrace();
         }
 
-
+        debug = true;
     }
-
-
 
 
     public ArrayList<Elevator> getElevators() {
@@ -77,8 +80,12 @@ public class ElevatorSubsystem extends Thread{
         this.elevatorIndex = elevatorIndex;
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+
     /**
-     *
      * This method creates a packet of the elevator's
      * information to send to the floor
      *
@@ -93,15 +100,15 @@ public class ElevatorSubsystem extends Thread{
         byte[] ack = "acknowledgment".getBytes();
 
         //Create a elevator packet for elevator (0); TODO Copy for other 3 elevators when confident in design.
-        if(packetID == 0){
+        if (packetID == 0) {
             //This will create a packet for each event.
 
             elevatorIndex = 0;
             tempByteArray[0] = (byte) (elevators.get(elevatorIndex).getId());
             tempByteArray[1] = (byte) (-1);
-            int j=2;
-            for (int i=0;  elevators.get(elevatorIndex).getDestinations().get(i+1)!= null; i++) {
-                tempByteArray[j] = (byte)( (int) (elevators.get(elevatorIndex).getDestinations().get(i)));
+            int j = 2;
+            for (int i = 0; elevators.get(elevatorIndex).getDestinations().get(i + 1) != null; i++) {
+                tempByteArray[j] = (byte) ((int) (elevators.get(elevatorIndex).getDestinations().get(i)));
                 j++;
             }
             tempByteArray[j] = (byte) (-1);
@@ -110,12 +117,12 @@ public class ElevatorSubsystem extends Thread{
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
-            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0 );
+            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0);
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
             byte[] textArray = ("" + (elevators.get(elevatorIndex).getElevatorState())).getBytes(); // LOADING MOVING IDLE
-            for (int i=0; i < textArray.length; i++) {
+            for (int i = 0; i < textArray.length; i++) {
                 tempByteArray[j] = textArray[i];
                 j++;
             }
@@ -125,15 +132,15 @@ public class ElevatorSubsystem extends Thread{
 
 
         }
-        if(packetID == 1){
+        if (packetID == 1) {
             //This will create a packet for each event.
 
             elevatorIndex = 1;
             tempByteArray[0] = (byte) (elevators.get(elevatorIndex).getId());
             tempByteArray[1] = (byte) (-1);
-            int j=2;
-            for (int i=0;  elevators.get(elevatorIndex).getDestinations().get(i+1)!= null; i++) {
-                tempByteArray[j] = (byte)( (int) (elevators.get(elevatorIndex).getDestinations().get(i)));
+            int j = 2;
+            for (int i = 0; elevators.get(elevatorIndex).getDestinations().get(i + 1) != null; i++) {
+                tempByteArray[j] = (byte) ((int) (elevators.get(elevatorIndex).getDestinations().get(i)));
                 j++;
             }
             tempByteArray[j] = (byte) (-1);
@@ -142,12 +149,12 @@ public class ElevatorSubsystem extends Thread{
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
-            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0 );
+            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0);
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
             byte[] textArray = ("" + (elevators.get(elevatorIndex).getElevatorState())).getBytes(); // LOADING MOVING IDLE
-            for (int i=0; i < textArray.length; i++) {
+            for (int i = 0; i < textArray.length; i++) {
                 tempByteArray[j] = textArray[i];
                 j++;
             }
@@ -157,15 +164,15 @@ public class ElevatorSubsystem extends Thread{
 
 
         }
-        if(packetID == 2){
+        if (packetID == 2) {
             //This will create a packet for each event.
 
             elevatorIndex = 2;
             tempByteArray[0] = (byte) (elevators.get(elevatorIndex).getId());
             tempByteArray[1] = (byte) (-1);
-            int j=2;
-            for (int i=0;  elevators.get(elevatorIndex).getDestinations().get(i+1)!= null; i++) {
-                tempByteArray[j] = (byte)( (int) (elevators.get(elevatorIndex).getDestinations().get(i)));
+            int j = 2;
+            for (int i = 0; elevators.get(elevatorIndex).getDestinations().get(i + 1) != null; i++) {
+                tempByteArray[j] = (byte) ((int) (elevators.get(elevatorIndex).getDestinations().get(i)));
                 j++;
             }
             tempByteArray[j] = (byte) (-1);
@@ -174,12 +181,12 @@ public class ElevatorSubsystem extends Thread{
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
-            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0 );
+            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0);
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
             byte[] textArray1 = ("" + (elevators.get(elevatorIndex).getElevatorState())).getBytes(); // LOADING MOVING IDLE
-            for (int i=0; i < textArray1.length; i++) {
+            for (int i = 0; i < textArray1.length; i++) {
                 tempByteArray[j] = textArray1[i];
                 j++;
             }
@@ -189,15 +196,15 @@ public class ElevatorSubsystem extends Thread{
 
 
         }
-        if(packetID == 3){
+        if (packetID == 3) {
             //This will create a packet for each event.
 
             elevatorIndex = 3;
             tempByteArray[0] = (byte) (elevators.get(elevatorIndex).getId());
             tempByteArray[1] = (byte) (-1);
-            int j=2;
-            for (int i=0;  elevators.get(elevatorIndex).getDestinations().get(i+1)!= null; i++) {
-                tempByteArray[j] = (byte)( (int) (elevators.get(elevatorIndex).getDestinations().get(i)));
+            int j = 2;
+            for (int i = 0; elevators.get(elevatorIndex).getDestinations().get(i + 1) != null; i++) {
+                tempByteArray[j] = (byte) ((int) (elevators.get(elevatorIndex).getDestinations().get(i)));
                 j++;
             }
             tempByteArray[j] = (byte) (-1);
@@ -206,20 +213,19 @@ public class ElevatorSubsystem extends Thread{
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
-            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0 );
+            tempByteArray[j] = (byte) (elevators.get(elevatorIndex).getEvent() ? 1 : 0);
             j++;
             tempByteArray[j] = (byte) (-1);
             j++;
             byte[] textArray2 = ("" + (elevators.get(elevatorIndex).getElevatorState())).getBytes(); // LOADING MOVING IDLE
-            for (int i=0; i < textArray2.length; i++) {
+            for (int i = 0; i < textArray2.length; i++) {
                 tempByteArray[j] = textArray2[i];
                 j++;
             }
             tempByteArray[j] = (byte) (-1);
             tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5000);
             return tempPacket;
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -233,8 +239,8 @@ public class ElevatorSubsystem extends Thread{
      *
      * @param actionPacket
      */
-    public int elevatorAction(DatagramPacket actionPacket){
-        System.out.println("DEBUG >> In Elevator Action method");
+    public int elevatorAction(DatagramPacket actionPacket) {
+        if (debug) {System.out.println("DEBUG >> In Elevator Action method");}
         byte[] data = new byte[100]; //issue
 //        recieveServerPacket = new DatagramPacket(data,data.length);
 //        try {
@@ -243,8 +249,9 @@ public class ElevatorSubsystem extends Thread{
 //            e.printStackTrace();
 //        }
 
-        data =  actionPacket.getData();
+        data = actionPacket.getData();
         elevatorIndex = data[0];
+
         System.out.println("DEBUG >> In Elevator Action method    Looking at data length: " + data.length);
         long end = System.nanoTime();
         long total = end - start;
@@ -253,14 +260,16 @@ public class ElevatorSubsystem extends Thread{
 
         System.out.print("DEBUG >> In Elevator Action method    Looking at data: ");
 
-        for(int i = 0; i < data.length; i++){
-            System.out.print(data[i] + " ");
 
+            for (int i = 0; i < data.length; i++) {
+                System.out.print(data[i] + " ");
+
+            }
+            System.out.println();
+            System.out.println("DEBUG >> Looking at data[2]: " + data[2]);
         }
-        System.out.println();
-        System.out.println("DEBUG >> Looking at data[2]: " + data[2]);
 
-        if(elevatorIndex <= 3 && elevatorIndex >=0) {
+        if (elevatorIndex <= 3 && elevatorIndex >= 0) {
             elevators.get(elevatorIndex).setEvent(true);
             if (data[2] == 1) { //getCurrent floor, return as packet
                 //send back currentFloor as packet,
@@ -292,9 +301,13 @@ public class ElevatorSubsystem extends Thread{
                 long startMove = System.nanoTime();
 
                 try {
+                	elevators.get(elevatorIndex).addDestinations(data[6]);
+
+                	planElevatorTrip(elevators.get(elevatorIndex).getId());
+                	if (debug){System.out.println("DEBUG >> Planed Elevator Trip.");}
                     elevators.get(elevatorIndex).move(data[4]);
-                    elevators.get(elevatorIndex).addDestinations(data[6]);
-                    planElevatorTrip(elevators.get(elevatorIndex).getId());
+//                    elevators.get(elevatorIndex).addDestinations(data[6]);
+//                    planElevatorTrip(elevators.get(elevatorIndex).getId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -302,10 +315,10 @@ public class ElevatorSubsystem extends Thread{
                 System.out.println("Timing of move elevator elevator action: " + (endMove - startMove) + ", start = " + startMove + ", end = " + endMove);
                 return 1;
             } else if (data[2] == 4) {// Open doors, close doors/ load
-                System.out.println("ELEVATOR ACTION LOAD ELEVATOR IF STATEMENT ENTERED");
+                if (debug) {System.out.println("ELEVATOR ACTION LOAD ELEVATOR IF STATEMENT ENTERED");}
                 end = System.nanoTime();
                 total = end - start;
-                System.out.println("Total runtime of ElevatorSubsystem: " + total/Math.pow(10,9) + " s");
+                System.out.println("Total runtime of ElevatorSubsystem: " + total / Math.pow(10, 9) + " s");
 
                 //packet structure: data[0]=elevindex, data[1]=0, data[2]=4
                 try {
@@ -324,13 +337,17 @@ public class ElevatorSubsystem extends Thread{
                 tempByteArray[1] = (byte) 0;
 
                 int index = 2;
-                System.out.print("DEBUG >>> 005 Req All pos: : ");
+                if (debug) {
+                    System.out.print("DEBUG >>> 005 Req All pos: : ");
+                }
                 for (int i = 0; i < destinations.size(); i++) {
                     tempByteArray[index++] = destinations.get(i).byteValue();
                     tempByteArray[index++] = (byte) 0;
-                    System.out.print(tempByteArray[index]);
+                    if (debug) {
+                        System.out.print(tempByteArray[index]);
+                    }
+                    System.out.print("");
                 }
-                System.out.print("");
 
 
                 try {
@@ -373,6 +390,8 @@ public class ElevatorSubsystem extends Thread{
                 tempByteArray[14] = (byte) elevators.get(3).getDirection();
                 tempByteArray[15] = (byte) 0;
 
+
+                if (debug) {
                 System.out.print("DEBUG >> 007 Req All pos: ");
                 end = System.nanoTime();
                 total = end - start;
@@ -382,8 +401,10 @@ public class ElevatorSubsystem extends Thread{
                 for (int i = 0; i < tempByteArray.length; i++) {
                     System.out.print(tempByteArray[i] + " ");
 
+
+                    }
+                    System.out.println();
                 }
-                System.out.println();
                 try {
                     DatagramPacket tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5002);
                     sendServerSocket.send(tempPacket);
@@ -423,8 +444,8 @@ public class ElevatorSubsystem extends Thread{
                 return 1;
 
             }
-        }
-        else{
+        } else {
+
 
             System.out.println("Failed to action elevator: ElevID =" + elevatorIndex );
             end = System.nanoTime();
@@ -432,9 +453,9 @@ public class ElevatorSubsystem extends Thread{
             System.out.println("(" + total / Math.pow(10,9) + " s)");
             System.out.println();
 
+
             return -1;
         }
-
 
 
         return 0;
@@ -448,8 +469,8 @@ public class ElevatorSubsystem extends Thread{
      */
 
 
-    public void updateElevator(DatagramPacket elevatorPacket){
-        byte[] data =  elevatorPacket.getData();
+    public void updateElevator(DatagramPacket elevatorPacket) {
+        byte[] data = elevatorPacket.getData();
         elevatorIndex = data[0];
 
 
@@ -458,40 +479,33 @@ public class ElevatorSubsystem extends Thread{
         int numfloor;
 
 
-
         tempMotor = elevators.get(elevatorIndex).getMotor();
-        tempDoor  = elevators.get(elevatorIndex).getDoor();
+        tempDoor = elevators.get(elevatorIndex).getDoor();
         numfloor = elevators.get(elevatorIndex).getNumFloorTotal();
 
         //From packet: Destinations, State, Moving, event, id, buttonList
-        ArrayList<ElevatorButton> tempButtons= elevators.get(elevatorIndex).getButtons();
+        ArrayList<ElevatorButton> tempButtons = elevators.get(elevatorIndex).getButtons();
         ArrayList<ElevatorLamp> tempLamps = elevators.get(elevatorIndex).getLamps();
         int j = 0;
         ElevatorState temp = null;
         for (int i = 0; i < data.length; i++) {
 
 
-            if( data[i] == ("" + ElevatorState.LOADING).getBytes()[0]){
+            if (data[i] == ("" + ElevatorState.LOADING).getBytes()[0]) {
                 temp = ElevatorState.LOADING;
             }
-            if( data[i] == ("" + ElevatorState.IDLE).getBytes()[0]){
+            if (data[i] == ("" + ElevatorState.IDLE).getBytes()[0]) {
                 temp = ElevatorState.IDLE;
-            }
-            else{//data[i] == ("" + ElevatorState.MOVING).getBytes()[0]
+            } else {//data[i] == ("" + ElevatorState.MOVING).getBytes()[0]
                 temp = ElevatorState.MOVING;
             }
         }
 
 
-
-
-
-        Elevator tempElevator = new Elevator(data[0],  tempButtons, tempLamps, tempMotor, tempDoor, numfloor, temp, fault);
+        Elevator tempElevator = new Elevator(data[0], tempButtons, tempLamps, tempMotor, tempDoor, numfloor, temp, fault);
         elevators.add(elevatorIndex, tempElevator);
 
     }
-
-
 
 
     /**
@@ -501,8 +515,13 @@ public class ElevatorSubsystem extends Thread{
      * @return a sorted array of what floors it must go to.
      */
     public java.util.ArrayList<java.lang.Integer> planElevatorTrip(int elevatorid) {
+        System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
+        elevatorid--;
+        System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
+        System.out.println("DEBUG >> Plan Elevator Dests: " + elevators.get(elevatorid).getDestinations());
         Collections.sort(elevators.get(elevatorid).getDestinations()); //Sort by inc fl #
         try {
+
             if (elevators.get(elevatorid).getMoving() == false && elevators.get(elevatorid).getCurrentFloor() < elevators.get(elevatorid).getDestinations().get(0)) { // if at floor 3 and the lowest button pressed is 2 AND not moving / at a floor waiting
                 elevators.get(elevatorid).setDirection(1); //aces
                 return elevators.get(elevatorid).getDestinations();
@@ -523,6 +542,27 @@ public class ElevatorSubsystem extends Thread{
 
     }
 
+    public byte[] codeGUIMSG(){
+        byte[] msg = new byte[100];
+        msg[0] = 0;
+        for(int i = 0;i<elevators.size(); i++){
+            msg[i*24+1] = (byte) elevators.get(i).getCurrentFloor();
+            if(elevators.get(i).getDoor().getDoorsOpen()){
+                msg[i*24+1+1] = 1;
+            }else{
+                msg[i*24+1+1] = 0;
+            }
+            for(int j=0;j<22;j++){
+                if(elevators.get(i).getButtons().get(j).getPressed()){
+                    msg[i*24+j+3] = 1;
+                }else{
+                    msg[i*24+j+3] = 0;
+                }
+            }
+        }
+        return  msg;
+    }
+
     public int getFault() {
         return fault;
     }
@@ -532,12 +572,17 @@ public class ElevatorSubsystem extends Thread{
     }
 
     public static void main(String[] args) {
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        System.out.println("Enable Debug? 1/0?");
+
+        String debug = myObj.nextLine();  // Read user input
+
         System.out.println("Elevator SS Starting ...");
         //initialize elevators
-        Elevator e1 = new Elevator(1,3);
-        Elevator e2 = new Elevator(2,3);
-        Elevator e3 = new Elevator(3,3);
-        Elevator e4 = new Elevator(4,3);
+        Elevator e1 = new Elevator(1, 22);
+        Elevator e2 = new Elevator(2, 22);
+        Elevator e3 = new Elevator(3, 22);
+        Elevator e4 = new Elevator(4, 22);
 
         //create elevator list
         ArrayList<Elevator> elevators = new ArrayList<>();
@@ -548,6 +593,9 @@ public class ElevatorSubsystem extends Thread{
 
 
         ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
+        if (Integer.parseInt(debug) == 0) {
+            elevatorSS.setDebug(false);
+        }
         //create elevator parts
         ArrayList<Floor> floors = new ArrayList<Floor>();
         elevatorSS.run();
@@ -557,19 +605,41 @@ public class ElevatorSubsystem extends Thread{
 
 
     /**
-     *
      * Receives packets from the floor subsystem and the scheduler
      * Based on data from floor's Packet, the elevator will perform
      * its main functionalities (Can be seen on elevator subsystem state diagram
-     *
      */
     public void run() {
-        System.out.println("DEBUG >> In run method ");
+        if (debug) { System.out.println("DEBUG >> In run method ");}
         byte[] msgFromFloor = new byte[8];
         recieveFloorPacket = new DatagramPacket(msgFromFloor, msgFromFloor.length);
         byte[] msgFromServer = new byte[8];
         recieveServerPacket = new DatagramPacket(msgFromServer, msgFromServer.length);
 
+        //GUI
+        Thread GUI = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] msg;
+                DatagramSocket sendSocket = null;
+                try {
+                    sendSocket = new DatagramSocket();
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+                while(true) {
+                    msg = codeGUIMSG();
+                    try {
+                        DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), 4000);
+                        sendSocket.send(packet);
+                    }catch(IOException e){
+                        System.out.println(e);
+                    }
+                }
+
+            }
+        });
+        GUI.start();
         //Start the timer
         start = System.nanoTime();
 
@@ -577,13 +647,15 @@ public class ElevatorSubsystem extends Thread{
         // Get interrupted when : Floor calls elevator through scheduler;   it reaches/leaves destination; button is pressed ; arrives at a floor;
         while (true) {
             try {
-                for (Elevator e:elevators) {
+                for (Elevator e : elevators) {
                     System.out.println("Elevator " + e.getId() + " is at floor " + e.getCurrentFloor());
                 }
+                System.out.println("");
 
-                System.out.println("DEBUG >> In try catch to receive packets");
-                System.out.println("DEBUG >> S P: " + recieveServerSocket.getLocalPort());
-
+                if (debug) {
+                    System.out.println("DEBUG >> In try catch to receive packets");
+                    System.out.println("DEBUG >> S P: " + recieveServerSocket.getLocalPort());
+                }
                 // recieveFloorSocket.receive(recieveFloorPacket);
                 recieveServerSocket.receive(recieveServerPacket);
 
@@ -591,12 +663,14 @@ public class ElevatorSubsystem extends Thread{
                 byte[] serverData = recieveServerPacket.getData();
                 fault = serverData[7];
 
-                System.out.print("DEBUG >> Data Received from S.SS:");
+                if (debug) {
+                    System.out.print("DEBUG >> Data Received from S.SS:");
 
-                for (int i = 0; i < serverData.length; i++) {
-                    System.out.print(serverData[i]);
+                    for (int i = 0; i < serverData.length; i++) {
+                        System.out.print(serverData[i]);
+                    }
+                    System.out.println();
                 }
-                System.out.println();
                 DatagramPacket tempPacket = new DatagramPacket(serverData, serverData.length);
                 elevatorAction(tempPacket);
             } catch (IOException e) {
@@ -608,9 +682,9 @@ public class ElevatorSubsystem extends Thread{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("DEBUG >> elevator index: " + elevatorIndex);
-            if (elevatorIndex <= 3 && elevatorIndex >=0) {
-                System.out.println("DEBUG >> elevator is event? " + elevators.get(elevatorIndex).getEvent());
+            if (debug) {System.out.println("DEBUG >> elevator index: " + elevatorIndex);}
+            if (elevatorIndex <= 3 && elevatorIndex >= 0) {
+                if (debug) {System.out.println("DEBUG >> elevator is event? " + elevators.get(elevatorIndex).getEvent());}
                 if (elevators.get(elevatorIndex).getEvent()) {
 
                     // Setting value for amount of floors to calculate
@@ -621,7 +695,7 @@ public class ElevatorSubsystem extends Thread{
                     long floors = elevators.get(elevatorIndex).getDestinations().get(0) - (elevators.get(elevatorIndex).getCurrentFloor());
 
                     //state 1 init
-                    System.out.println("elevators.get( elevatorIndex ).getDestinations().contains(elevators.get( elevatorIndex ).getLastButtonPressed()): " + elevators.get(elevatorIndex).getDestinations().contains(elevators.get(elevatorIndex).getLastButtonPressed()) + " " + elevators.get(elevatorIndex).getLastButtonPressed() + " " + elevators.get(elevatorIndex).getDestinations());
+                    if (debug) {System.out.println("elevators.get( elevatorIndex ).getDestinations().contains(elevators.get( elevatorIndex ).getLastButtonPressed()): " + elevators.get(elevatorIndex).getDestinations().contains(elevators.get(elevatorIndex).getLastButtonPressed()) + " " + elevators.get(elevatorIndex).getLastButtonPressed() + " " + elevators.get(elevatorIndex).getDestinations());}
                     if (elevators.get(elevatorIndex).getDestinations().contains(elevators.get(elevatorIndex).getLastButtonPressed())) {
                         System.out.println("Elevator Position: " + elevators.get(elevatorIndex).getCurrentFloor());
                         System.out.println("Elevator Position 2: " + elevators.get(elevatorIndex).getCurrentFloor());
@@ -669,4 +743,7 @@ public class ElevatorSubsystem extends Thread{
 
     }
 }
+
+
+
 

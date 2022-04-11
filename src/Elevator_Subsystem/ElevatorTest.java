@@ -116,7 +116,7 @@ public class ElevatorTest {
         Floor floor = new Floor(1, floorLamps, 22,arrivalSensors );
         Floor floor2 = new Floor(2, floorLamps, 22,arrivalSensors);
         Floor floor3 = new Floor(3,floorLamps, 22,arrivalSensors);
-        assertNotEquals(2, elevator.getCurrentFloor());
+        assertEquals(2, elevator.getCurrentFloor());
     }
 
 }

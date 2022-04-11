@@ -30,9 +30,9 @@ public class ArrivalSensor {
 
 		byte[] temp = new byte[5];
 		temp[0] = (byte) elevatorid;
-		temp[0] = 0;
-		temp[0] = 1;
-		temp[0] = 0;
+		temp[1] = 0;
+		temp[2] = 1;
+		temp[3] = 0;
 		byte[] recieveTemp = new byte[4];
 		DatagramPacket recievePacket =  new DatagramPacket(recieveTemp, recieveTemp.length);
 		try {
@@ -46,8 +46,8 @@ public class ArrivalSensor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-
+		
+		System.out.println("Arrival snsr check: fl n = " + floorNumber + " evel pos= " + recieveTemp[2]);
 		return floorNumber == recieveTemp[2];
 	}
 
@@ -60,10 +60,10 @@ public class ArrivalSensor {
 	}
 
 	/**
-	 *
+	 * gets arrival sensor data
+	 * @param socket
 	 * @return
 	 */
-	// Send Scheduler info to the floor instead of using scheduler class
 	public Boolean getArrivalSensorData(DatagramSocket socket){
 		byte[] destinations = new byte[23];
 
