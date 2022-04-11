@@ -31,6 +31,9 @@ public class Scheduler extends Thread {
     ArrayList<Integer> elevatorList;
     int elevatorIndex;
     int fault;
+    long start;
+    long end;
+    long total;
     private static final long expectedTime = 950000000; //expected time of elevator reaching its destination
 
 
@@ -242,6 +245,11 @@ public class Scheduler extends Thread {
 
 
         System.out.println("Send a packet to make elevator call its own version of stopElevatorAtFloor method");
+        end = System.nanoTime();
+        total = end - start;
+        System.out.println("(" + total / Math.pow(10,9) + " s)");
+        System.out.println();
+
         byte[] dataStopElevator = new byte[7];
         dataStopElevator[0] = (byte) elevatorId;
         dataStopElevator[1] = 0;
@@ -354,6 +362,11 @@ public class Scheduler extends Thread {
     public void activeState(ArrayList<Integer> elevatorList, int elevatorIndex) {
         Boolean goToIdleBoolean = true;
         System.out.println("In scheduler active state function");
+        end = System.nanoTime();
+        total = end - start;
+        System.out.println("(" + total / Math.pow(10,9) + " s)");
+        System.out.println();
+
         for(int i = 0; i < elevatorList.size(); i++) {
 
             //CREATE PACKET TO ASK FOR ALL DESTINATIONS OF A ELEVATOR
@@ -426,6 +439,10 @@ public class Scheduler extends Thread {
         int floorPort;
         System.out.println("DEBUG >> In schedulers recieve Floor packet function");
         System.out.println("DEBUG >> Scheduler State: " + schedulerState);
+        end = System.nanoTime();
+        total = end - start;
+        System.out.println("(" + total / Math.pow(10,9) + " s)");
+        System.out.println();
 
         byte[] data = new byte[8]; //issue
 
@@ -446,6 +463,11 @@ public class Scheduler extends Thread {
         floordata = recieveFloorPacket.getData();
         fault = floordata[7];
         System.out.print("DEBUG >> Data Recieved from F.SS:");
+        end = System.nanoTime();
+        total = end - start;
+        System.out.println("(" + total / Math.pow(10,9) + " s)");
+        System.out.println();
+
         for(int i = 0; i < floordata.length; i++){
             System.out.print(floordata[i]);
 
@@ -560,6 +582,11 @@ public class Scheduler extends Thread {
                 destinations = recieveElevatorPacket.getData();
 
                 System.out.print("DEBUG >> Setting move packets of elevators in receive floor: destinations: ");
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
+
                 for(int i = 0; i < destinations.length; i++){
                     System.out.print(destinations[i]+ " ");
 
@@ -618,6 +645,11 @@ public class Scheduler extends Thread {
                 }
             }
             System.out.println("DEBUG >>> Request from floor, best elevator: " + bestElevator);
+            end = System.nanoTime();
+            total = end - start;
+            System.out.println("(" + total / Math.pow(10,9) + " s)");
+            System.out.println();
+
             byte[] information = new byte[9];
             information[0] =(byte) bestElevator;
             information[1] =(byte) 0;
@@ -636,6 +668,11 @@ public class Scheduler extends Thread {
             }
             try {
                 System.out.println("Line 635 Send Elevator");
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
+
                 sendElevator(information[0], information);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
@@ -651,6 +688,11 @@ public class Scheduler extends Thread {
         // IF its 4 bytes long, then its a stopElevatorAt packet
         else if (floordata.length==4) {
             System.out.println("DEBUG >> recieveFloor Else if Len = 4");
+            end = System.nanoTime();
+            total = end - start;
+            System.out.println("(" + total / Math.pow(10,9) + " s)");
+            System.out.println();
+
             String floorString = new String(recieveFloorPacket.getData());
             String[] tempS = floorString.split("0");
 
@@ -709,10 +751,19 @@ public class Scheduler extends Thread {
                 System.out.println();
 
                 System.out.println("DEBUG >>> Elevator index: " + selectedElevator);
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
 
                 sendElevatorPacket = new DatagramPacket(info, info.length, InetAddress.getByName("localhost"), 5001);
                 sendElevatorSocket.send(sendElevatorPacket);
                 System.out.println("DEBUG >> Packet sent from SendElevator f(x).DEBUG >> Packet sent from SendElevator f(x).");
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
+
             } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -772,6 +823,10 @@ public class Scheduler extends Thread {
                 dataGetDest[1] = 0;
                 dataGetDest[2] = 5;
                 System.out.println("DEBUG >> Scheduler RUN DataGetDest[0] = byte(ElevId): " + dataGetDest[0] + " And elevId as int: " + elevatorIndex);
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
 
                 try {
                     sendElevator(elevatorIndex, dataGetDest);
@@ -815,6 +870,11 @@ public class Scheduler extends Thread {
                         recieveElevatorPacket = new DatagramPacket(recieveTempData, recieveTempData.length);
                         recieveElevatorSocket.receive(recieveElevatorPacket);
                         System.out.print("DEBUG >> 007 Req All pos: recieveElevatorPacket.getData(): ");
+                        end = System.nanoTime();
+                        total = end - start;
+                        System.out.println("(" + total / Math.pow(10,9) + " s)");
+                        System.out.println();
+
                         for(int j = 0; j < recieveElevatorPacket.getData().length; j++){
                             System.out.print(recieveElevatorPacket.getData()[j]);
 

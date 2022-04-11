@@ -246,6 +246,11 @@ public class ElevatorSubsystem extends Thread{
         data =  actionPacket.getData();
         elevatorIndex = data[0];
         System.out.println("DEBUG >> In Elevator Action method    Looking at data length: " + data.length);
+        long end = System.nanoTime();
+        long total = end - start;
+        System.out.println("(" + total / Math.pow(10,9) + " s)");
+        System.out.println();
+
         System.out.print("DEBUG >> In Elevator Action method    Looking at data: ");
 
         for(int i = 0; i < data.length; i++){
@@ -369,6 +374,11 @@ public class ElevatorSubsystem extends Thread{
                 tempByteArray[15] = (byte) 0;
 
                 System.out.print("DEBUG >> 007 Req All pos: ");
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
+
                 for (int i = 0; i < tempByteArray.length; i++) {
                     System.out.print(tempByteArray[i] + " ");
 
@@ -417,6 +427,11 @@ public class ElevatorSubsystem extends Thread{
         else{
 
             System.out.println("Failed to action elevator: ElevID =" + elevatorIndex );
+            end = System.nanoTime();
+            total = end - start;
+            System.out.println("(" + total / Math.pow(10,9) + " s)");
+            System.out.println();
+
             return -1;
         }
 
