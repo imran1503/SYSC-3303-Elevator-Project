@@ -251,10 +251,15 @@ public class ElevatorSubsystem extends Thread {
 
         data = actionPacket.getData();
         elevatorIndex = data[0];
-        if (debug) {
-            System.out.println("DEBUG >> In Elevator Action method    Looking at data length: " + data.length);
 
-            System.out.print("DEBUG >> In Elevator Action method    Looking at data: ");
+        System.out.println("DEBUG >> In Elevator Action method    Looking at data length: " + data.length);
+        long end = System.nanoTime();
+        long total = end - start;
+        System.out.println("(" + total / Math.pow(10,9) + " s)");
+        System.out.println();
+
+        System.out.print("DEBUG >> In Elevator Action method    Looking at data: ");
+
 
             for (int i = 0; i < data.length; i++) {
                 System.out.print(data[i] + " ");
@@ -385,10 +390,17 @@ public class ElevatorSubsystem extends Thread {
                 tempByteArray[14] = (byte) elevators.get(3).getDirection();
                 tempByteArray[15] = (byte) 0;
 
+
                 if (debug) {
-                    System.out.print("DEBUG >> 007 Req All pos: ");
-                    for (int i = 0; i < tempByteArray.length; i++) {
-                        System.out.print(tempByteArray[i] + " ");
+                System.out.print("DEBUG >> 007 Req All pos: ");
+                end = System.nanoTime();
+                total = end - start;
+                System.out.println("(" + total / Math.pow(10,9) + " s)");
+                System.out.println();
+
+                for (int i = 0; i < tempByteArray.length; i++) {
+                    System.out.print(tempByteArray[i] + " ");
+
 
                     }
                     System.out.println();
@@ -434,7 +446,14 @@ public class ElevatorSubsystem extends Thread {
             }
         } else {
 
-            System.out.println("Failed to action elevator: ElevID =" + elevatorIndex);
+
+            System.out.println("Failed to action elevator: ElevID =" + elevatorIndex );
+            end = System.nanoTime();
+            total = end - start;
+            System.out.println("(" + total / Math.pow(10,9) + " s)");
+            System.out.println();
+
+
             return -1;
         }
 
@@ -688,10 +707,25 @@ public class ElevatorSubsystem extends Thread {
                             total = end - start;
 
 
+                            if(fault == 1) {
+                                System.out.println("Fault detected: Door is stuck open");
+                            }
+
+
                             if (fault == 2) {
                                 System.out.println("Fault Detected: Took elevator too long to reach destination");
-
                             }
+
+                            if (fault == 3) {
+                                System.out.println("Fault detected: Floor timer exceeded expected time. Elevator will now shut off.");
+                                try {
+                                    wait();
+                                } catch (InterruptedException e1) {
+
+                                }
+                            }
+
+
                         } catch (IndexOutOfBoundsException e) {
                             System.out.println("Elevator " + this.elevators.get(elevatorIndex).getId() + " has no destinations to go to. ");
                             this.elevators.get(elevatorIndex).setEvent(false);

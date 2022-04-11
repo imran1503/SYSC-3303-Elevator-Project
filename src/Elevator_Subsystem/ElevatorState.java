@@ -43,7 +43,7 @@ public enum ElevatorState {
 			System.out.println("Elevator load f(x)");
 	        while(e.getIsMoving()){
 	            try {
-					System.out.println("Fault detected: Door is stuck open");
+					System.out.println("Fault detected: Floor timer exceeded expected time. Elevator will now shut off.");
 	                wait();
 	            }
 	            catch (InterruptedException e1){}
