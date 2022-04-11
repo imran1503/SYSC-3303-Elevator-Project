@@ -1,5 +1,7 @@
 package javafxGUI;
 
+import com.sun.jdi.ByteValue;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -74,6 +76,32 @@ public class GUITest {
             elevatorPacket = new DatagramPacket(elevatorMSG, elevatorMSG.length, InetAddress.getLocalHost(), 4000);
             socket.send(floorPacket);
             socket.send(elevatorPacket);
+        }catch(IOException e){
+            System.err.println(e);
+        }
+
+        byte[] fault = new byte[20];
+        fault[0] = 2;
+        fault[1] = 3;
+        double d = 12.345;
+        byte[] num = new byte[8];
+        String deci = Double.toString(d);
+        num = deci.getBytes();
+        for(int i = 0; i<num.length; i++){
+            fault[i+2] = num[i];
+        }
+
+        try{
+            DatagramPacket packet = new DatagramPacket(fault, fault.length, InetAddress.getLocalHost(), 4000);
+            socket = new DatagramSocket();
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
+            socket.send(packet);
         }catch(IOException e){
             System.err.println(e);
         }

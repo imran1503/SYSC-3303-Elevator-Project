@@ -5,10 +5,7 @@ import Floor_Subsystem.Floor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -457,18 +454,25 @@ public class Scheduler extends Thread {
 
         if (fault == 1) {
             long t1 = System.nanoTime();
-            System.out.println("Fault detected: Door is stuck open (" + ((t1 - start) / Math.pow(10, 9)) + "s) ");
+            double time = (t1 - start) / Math.pow(10, 9);
+            System.out.println("Fault detected: Door is stuck open (" + time + "s) ");
+            faultToGUI(fault, time);
         }
 
 
         if (fault == 2) {
             long t2 = System.nanoTime();
-            System.out.println("Fault Detected: Took elevator too long to reach destination (" + ((t2 - start) / Math.pow(10, 9)) + "s) ");
+            double time = (t2 - start) / Math.pow(10, 9);
+            System.out.println("Fault Detected: Took elevator too long to reach destination (" + time + "s) ");
+            faultToGUI(fault, time);
+
         }
 
         if (fault == 3) {
             long t3 = System.nanoTime();
-            System.out.println("Fault detected: Floor timer exceeded expected time. Elevator will now shut off (" + ((t3 - start) / Math.pow(10, 9)) + "s) ");
+            double time = (t3 - start) / Math.pow(10, 9);
+            System.out.println("Fault detected: Floor timer exceeded expected time. Elevator will now shut off (" + time + "s) ");
+            faultToGUI(fault, time);
             try {
                 wait();
             } catch (InterruptedException e1) {
@@ -716,6 +720,16 @@ public class Scheduler extends Thread {
 
                 if (fault == 3) {
                     System.out.println("Fault detected: Elevetor took more time than expected to reach its destination");
+                    byte[] msg = new byte[3];
+                    msg[0] = 2;
+                    msg[1] = 3;
+                    try {
+                        DatagramSocket GUISocket = new DatagramSocket();
+                        DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), 4000);
+                        GUISocket.send(packet);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -736,6 +750,26 @@ public class Scheduler extends Thread {
             System.out.println("Timing of RecieveFloor: " + (endRF - startRF) + ", start = " + startRF + ", end = " + endRF);
             return -1;
 
+        }
+
+        public void faultToGUI(int fault, double time){
+            byte[] msg = new byte[20];
+            msg[0] = 2;
+            msg[1] = (byte)fault;
+            byte[] num = new byte[8];
+            num = Double.toString(time).getBytes();
+            for(int i =0; i< num.length; i++){
+                msg[i+2] = num[i];
+            }
+
+
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                DatagramPacket packet = new DatagramPacket(msg, msg.length,InetAddress.getLocalHost(), 4000);
+                socket.send(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 
