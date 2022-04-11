@@ -261,7 +261,7 @@ public class FloorSubsystem extends Thread {
     public DatagramPacket createPacket(int elevatorIndex, int floorNum) throws IOException {
         if (debug) {System.out.println("DEBUG >> In create Packet for stopping a elevator");}
         DatagramPacket tempPacket;
-        byte[] tempByteArray = new byte[4];
+        byte[] tempByteArray = new byte[5];
         byte[] ack = "acknowledgment".getBytes();
 
  

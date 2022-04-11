@@ -45,7 +45,6 @@ class FloorSubsystemTest {
         BufferedReader file = new BufferedReader(new FileReader(file1));
 
         ArrayList<Floor> floorsArrayList = new ArrayList<>();
-
         for (int i = 0; i < amountOfFloorsinBuilding; i++) {
             Floor floor = new Floor(i, floorLamps, amountOfFloorsinBuilding, arrivalSensors);
             floor.setElevators(elevators);
@@ -60,8 +59,9 @@ class FloorSubsystemTest {
 
 
         DatagramPacket packet =  floorSS.createPacket(0);
-        assertEquals(0, packet.getData()[0]);
-        assertEquals(4, packet.getData()[5]);
+        assertEquals(4, packet.getData()[1]);
+        assertEquals(0, packet.getData()[3]);
+        assertEquals(3, packet.getData()[5]);
     }
 
     @Test
