@@ -494,8 +494,13 @@ public class ElevatorSubsystem extends Thread {
      * @return a sorted array of what floors it must go to.
      */
     public java.util.ArrayList<java.lang.Integer> planElevatorTrip(int elevatorid) {
+        System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
+        elevatorid--;
+        System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
+        System.out.println("DEBUG >> Plan Elevator Dests: " + elevators.get(elevatorid).getDestinations());
         Collections.sort(elevators.get(elevatorid).getDestinations()); //Sort by inc fl #
         try {
+
             if (elevators.get(elevatorid).getMoving() == false && elevators.get(elevatorid).getCurrentFloor() < elevators.get(elevatorid).getDestinations().get(0)) { // if at floor 3 and the lowest button pressed is 2 AND not moving / at a floor waiting
                 elevators.get(elevatorid).setDirection(1); //aces
                 return elevators.get(elevatorid).getDestinations();
