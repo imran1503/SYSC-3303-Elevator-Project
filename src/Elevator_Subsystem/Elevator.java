@@ -2,7 +2,10 @@ package Elevator_Subsystem;
 
 import Floor_Subsystem.Floor;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static java.lang.Thread.sleep;
 
 //import Elevator_Subsystem.*;
 
@@ -158,7 +161,12 @@ public class Elevator  {
     }
     
     public void addDestinations(int floor) {
-    	destinations.add(floor);
+    	System.out.println("addDestination is called");
+        execute(floor);
+    }
+
+    public void addNewDestination(int floor){
+        destinations.add(floor);
     }
     
     public boolean getIsMoving() {
@@ -229,6 +237,8 @@ public class Elevator  {
      * @throws InterruptedException
      */
     public synchronized void move(int direction) throws InterruptedException {
+
+        /*
         setDirection(direction);
         this.direction=direction;
         System.out.println("Move: move?" + isMoving);
@@ -243,6 +253,7 @@ public class Elevator  {
             }
         }
         System.out.println("Move try");
+
         try {
             if (direction == 1) {
                 System.out.println("CurFloor ++");
@@ -258,7 +269,7 @@ public class Elevator  {
             System.out.println("dir: " + this.direction);
         }
         catch (InterruptedException e){}
-
+*/
     }
 
 
@@ -295,6 +306,14 @@ public class Elevator  {
 
     public ElevatorDoor getDoor() {
         return door;
+    }
+
+    public void moveUp(){
+        currentFloor++;
+    }
+
+    public void moveDown(){
+        currentFloor--;
     }
 
 
