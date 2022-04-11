@@ -12,11 +12,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.*;
 
 public class SchedulerStateTest {
 
-    
+    @Test
     public void change() throws FileNotFoundException {
         ArrayList<FloorLamp> floorLamps = new ArrayList<>();
         ArrayList<FloorButton> floorButtons = new ArrayList<>();
