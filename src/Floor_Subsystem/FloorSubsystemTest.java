@@ -15,54 +15,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FloorSubsystemTest {
-// NOTE YOU MUST RUN ALL TESTS INDIVIDUALLY OTHERWISE THE PORTS WILL ALREADY BE IN USE ---------------------
-    @Test
-    void createPacket() throws IOException {
-
-        int amountOfFloorsinBuilding = 22;
-
-        ArrayList<Elevator> elevators = new ArrayList<>();
-        //get elevators from elevator ss via packets
-//        elevators.add(elevator);
-
-        //create floor parts
-        ArrayList<FloorLamp> floorLamps = new ArrayList<>();
-        ArrayList<ArrivalSensor> arrivalSensors = new ArrayList<>();
-
-
-        for (int i = 0; i < amountOfFloorsinBuilding; i++) {
-            FloorLamp templamp1 = new FloorLamp(i);
-            floorLamps.add(templamp1);
-
-            for (int j = 0; j < elevators.size(); j++) {
-                ArrivalSensor sensor = new ArrivalSensor(elevators.get(i).getId(), i,j);
-                arrivalSensors.add(sensor);
-            }
-        }
-
-        //make packet for events
-        File file1 = new File("src/events.txt");
-        BufferedReader file = new BufferedReader(new FileReader(file1));
-
-        ArrayList<Floor> floorsArrayList = new ArrayList<>();
-        for (int i = 0; i < amountOfFloorsinBuilding; i++) {
-            Floor floor = new Floor(i, floorLamps, amountOfFloorsinBuilding, arrivalSensors);
-            floor.setElevators(elevators);
-            floorsArrayList.add(floor);
-        }
-
-        FloorSubsystem floorSS = new FloorSubsystem(floorsArrayList, file);
-
-
-
-
-
-
-        DatagramPacket packet =  floorSS.createPacket(0);
-        assertEquals(4, packet.getData()[1]);
-        assertEquals(0, packet.getData()[3]);
-        assertEquals(3, packet.getData()[5]);
-    }
 
     @Test
     void testCreatePacket() throws IOException {
@@ -70,8 +22,6 @@ class FloorSubsystemTest {
         int amountOfFloorsinBuilding = 22;
 
         ArrayList<Elevator> elevators = new ArrayList<>();
-        //get elevators from elevator ss via packets
-//        elevators.add(elevator);
 
         //create floor parts
         ArrayList<FloorLamp> floorLamps = new ArrayList<>();
@@ -101,12 +51,6 @@ class FloorSubsystemTest {
         }
 
         FloorSubsystem floorSS = new FloorSubsystem(floorsArrayList, file);
-
-
-
-
-
-
 
 
         DatagramPacket packet =  floorSS.createPacket(0, 1);
