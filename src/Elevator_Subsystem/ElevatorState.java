@@ -78,6 +78,7 @@ public enum ElevatorState {
 			if(floor == 0) {
 				e.getMotor().setMoving(false);
 				e.setMoving(false);
+				int direction = e.getDirection();
 				e.setDirection(0);
 				Thread closeDoor = new Thread(new Runnable() {
 					@Override
@@ -95,7 +96,14 @@ public enum ElevatorState {
 						}
 						e.setElevatorState(IDLE);
 						if (!e.getDestinations().isEmpty()) {
-							e.setDestination(e.getDestinations().get(0));
+
+							ArrayList<Integer> destinations = new ArrayList<>(e.getDestinations());
+							Collections.sort(destinations);
+							if(direction == 1){
+								e.setDestination(e.getDestinations().get(e.getDestinations().size()-1));
+							}else{
+								e.setDestination(e.getDestinations().get(0));
+							}
 							e.execute(e.getDestination());
 						}
 					}
