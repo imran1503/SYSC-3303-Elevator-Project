@@ -60,6 +60,11 @@ public class ElevatorSubsystem extends Thread {
             e.printStackTrace();
         }
 
+
+
+
+
+
         debug = true;
     }
 
@@ -240,7 +245,12 @@ public class ElevatorSubsystem extends Thread {
      * @param actionPacket
      */
     public int elevatorAction(DatagramPacket actionPacket) {
-        if (debug) {System.out.println("DEBUG >> In Elevator Action method");}
+        if (debug) {System.out.println("DEBUG >> In Elevator Action method");
+            end = System.nanoTime();
+            total = (end - start);
+            System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+            System.out.println();
+        }
         byte[] data = new byte[100]; //issue
 //        recieveServerPacket = new DatagramPacket(data,data.length);
 //        try {
@@ -255,6 +265,10 @@ public class ElevatorSubsystem extends Thread {
             System.out.println("DEBUG >> In Elevator Action method    Looking at data length: " + data.length);
 
             System.out.print("DEBUG >> In Elevator Action method    Looking at data: ");
+            end = System.nanoTime();
+            total = (end - start);
+            System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+            System.out.println();
 
             for (int i = 0; i < data.length; i++) {
                 System.out.print(data[i] + " ");
@@ -262,6 +276,10 @@ public class ElevatorSubsystem extends Thread {
             }
             System.out.println();
             System.out.println("DEBUG >> Looking at data[2]: " + data[2]);
+            end = System.nanoTime();
+            total = (end - start);
+            System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+            System.out.println();
         }
 
         if (elevatorIndex <= 3 && elevatorIndex >= 0) {
@@ -299,7 +317,13 @@ public class ElevatorSubsystem extends Thread {
                 	elevators.get(elevatorIndex).addDestinations(data[6]);
 
                 	planElevatorTrip(elevators.get(elevatorIndex).getId());
-                	if (debug){System.out.println("DEBUG >> Planed Elevator Trip.");}
+                	if (debug){System.out.println("DEBUG >> Planed Elevator Trip.");
+                        end = System.nanoTime();
+                        total = (end - start);
+                        System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+                        System.out.println();
+
+                    }
                     elevators.get(elevatorIndex).move(data[4]);
 //                    elevators.get(elevatorIndex).addDestinations(data[6]);
 //                    planElevatorTrip(elevators.get(elevatorIndex).getId());
@@ -334,6 +358,10 @@ public class ElevatorSubsystem extends Thread {
                 int index = 2;
                 if (debug) {
                     System.out.print("DEBUG >>> 005 Req All pos: : ");
+                    end = System.nanoTime();
+                    total = (end - start);
+                    System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+                    System.out.println();
                 }
                 for (int i = 0; i < destinations.size(); i++) {
                     tempByteArray[index++] = destinations.get(i).byteValue();
@@ -387,6 +415,11 @@ public class ElevatorSubsystem extends Thread {
 
                 if (debug) {
                     System.out.print("DEBUG >> 007 Req All pos: ");
+                    end = System.nanoTime();
+                    total = (end - start);
+                    System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+                    System.out.println();
+
                     for (int i = 0; i < tempByteArray.length; i++) {
                         System.out.print(tempByteArray[i] + " ");
 
@@ -435,6 +468,11 @@ public class ElevatorSubsystem extends Thread {
         } else {
 
             System.out.println("Failed to action elevator: ElevID =" + elevatorIndex);
+            end = System.nanoTime();
+            total = (end - start);
+            System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+            System.out.println();
+
             return -1;
         }
 
@@ -497,9 +535,24 @@ public class ElevatorSubsystem extends Thread {
      */
     public java.util.ArrayList<java.lang.Integer> planElevatorTrip(int elevatorid) {
         System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
+        end = System.nanoTime();
+        total = (end - start);
+        System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+        System.out.println();
+
         elevatorid--;
         System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
+        end = System.nanoTime();
+        total = (end - start);
+        System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+        System.out.println();
+
         System.out.println("DEBUG >> Plan Elevator Dests: " + elevators.get(elevatorid).getDestinations());
+        end = System.nanoTime();
+        total = (end - start);
+        System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+        System.out.println();
+
         Collections.sort(elevators.get(elevatorid).getDestinations()); //Sort by inc fl #
         try {
 
@@ -591,7 +644,12 @@ public class ElevatorSubsystem extends Thread {
      * its main functionalities (Can be seen on elevator subsystem state diagram
      */
     public void run() {
-        if (debug) { System.out.println("DEBUG >> In run method ");}
+        if (debug) { System.out.println("DEBUG >> In run method ");
+            end = System.nanoTime();
+            total = (end - start);
+            System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
+            System.out.println();
+        }
         byte[] msgFromFloor = new byte[8];
         recieveFloorPacket = new DatagramPacket(msgFromFloor, msgFromFloor.length);
         byte[] msgFromServer = new byte[8];
@@ -601,6 +659,7 @@ public class ElevatorSubsystem extends Thread {
         Thread GUI = new Thread(new Runnable() {
             @Override
             public void run() {
+
                 byte[] msg;
                 DatagramSocket sendSocket = null;
                 try {
