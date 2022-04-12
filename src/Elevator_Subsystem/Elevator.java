@@ -41,7 +41,7 @@ public class Elevator  {
             this.lamps.add(new ElevatorLamp(i));
         }
         destinations = new ArrayList<>();
-        direction = 1;
+        direction = 0;
         isEvent = false;
         this.door = new ElevatorDoor();
         this.id = id;
@@ -67,7 +67,7 @@ public class Elevator  {
             buttons.add(tempButton);
         }
         destinations = new ArrayList<Integer>();
-        direction = 1;
+        direction = 0;
         isEvent = false;
         this.buttons = elevatorButtonArrayList;
         this.door = elevatorDoor;
@@ -196,7 +196,7 @@ public class Elevator  {
      */
     public void pressFloorNumberButton(int floor) {
     	//button only reacts when its is in the direction as the elevator's moving
-    	if((currentFloor > floor && direction == 0) || (currentFloor < floor && direction == 1)) {
+    	if((currentFloor > floor && direction == -1) || (currentFloor < floor && direction == 1)) {
     		buttons.get(floor).setPressed(true);
         	lamps.get(floor).setVisited(true);
         	lastButtonPressed=floor;

@@ -498,7 +498,6 @@ public class ElevatorSubsystem extends Thread {
     public java.util.ArrayList<java.lang.Integer> planElevatorTrip(int elevatorid) {
         System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
         elevatorid--;
-        System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
         System.out.println("DEBUG >> Plan Elevator Dests: " + elevators.get(elevatorid).getDestinations());
         Collections.sort(elevators.get(elevatorid).getDestinations()); //Sort by inc fl #
         try {
@@ -512,7 +511,7 @@ public class ElevatorSubsystem extends Thread {
                 return elevators.get(elevatorid).getDestinations();
             } else if (!elevators.get(elevatorid).getMoving() && elevators.get(elevatorid).getCurrentFloor() > elevators.get(elevatorid).getDestinations().get(elevators.get(elevatorid).getDestinations().size() - 2)) {
                 Collections.reverse(elevators.get(elevatorid).getDestinations());
-                elevators.get(elevatorid).setDirection(0);  // desc
+                elevators.get(elevatorid).setDirection(-1);  // desc
                 return elevators.get(elevatorid).getDestinations();
             }
         } catch (IndexOutOfBoundsException e) {
