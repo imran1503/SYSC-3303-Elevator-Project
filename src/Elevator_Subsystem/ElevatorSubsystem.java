@@ -331,20 +331,22 @@ public class ElevatorSubsystem extends Thread {
                     e.printStackTrace();
                 }
                 long endMove = System.nanoTime();
-                System.out.println("Timing of move elevator elevator action: " + (endMove - startMove) + ", start = " + startMove + ", end = " + endMove);
+                if(debug){System.out.println("Timing of move elevator elevator action: " + (endMove - startMove) + ", start = " + startMove + ", end = " + endMove);}
                 return 1;
             } else if (data[2] == 4) {// Open doors, close doors/ load
                 if (debug) {System.out.println("ELEVATOR ACTION LOAD ELEVATOR IF STATEMENT ENTERED");}
                 end = System.nanoTime();
                 total = end - start;
                 System.out.println("Total runtime of ElevatorSubsystem: " + total / Math.pow(10, 9) + " s");
-
+                long startL = System.nanoTime();
                 //packet structure: data[0]=elevindex, data[1]=0, data[2]=4
                 try {
                     elevators.get(elevatorIndex).load();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                long endL = System.nanoTime();
+                if (debug) {System.out.println("Timing of Load: " + (endL - startL) + ", start = " + startL + ", end = " + endL); }
                 return 1;
 
             } else if (data[2] == 5) {//getDestinations, return as a packet to scheduler
@@ -385,8 +387,12 @@ public class ElevatorSubsystem extends Thread {
             } else if (data[2] == 6) { // set moving to ? T/F depends on next piece of data
                 //packet structure: data[0] = elevId, data[1] = 0, data[2]=6, data[3] = 0, data[4] = floorNum, data[5] = 0, data[6] = setmoving
                 if (data[6] == 0) {
+                    long startSEA = System.nanoTime();
                     elevators.get(elevatorIndex).setMoving(false);
                     elevators.get(elevatorIndex).stopAt(data[4]);
+                    long endSEA = System.nanoTime();
+                    if (debug) {System.out.println("Timing of Stop Elevator At: " + (endSEA - startSEA) + ", start = " + startSEA + ", end = " + endSEA);}
+
                 }
                 return 1;
             } else if (data[2] == 7) {// requesting all elevator positions
