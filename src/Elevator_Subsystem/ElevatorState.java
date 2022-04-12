@@ -1,5 +1,8 @@
 package Elevator_Subsystem;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import static java.lang.Thread.sleep;
 
 public enum ElevatorState {
@@ -12,6 +15,10 @@ public enum ElevatorState {
 			System.out.println("===Elevator "+ e.getId()+" is in IDLE state===\n");
 			e.setDestination(floor);
 	        e.addNewDestination(floor);
+	        if(e.getDestinations().contains(e.getCurrentFloor())){
+	        	e.getDestinations().remove(new Integer(e.getCurrentFloor()));
+	        	return IDLE;
+			}
 	        //close doors before moving
 	        e.getDoor().setDoorsOpen(false);
 	        e.getMotor().setMoving(true);
@@ -43,7 +50,7 @@ public enum ElevatorState {
 						}
 					}
 					//it reached one destination, load
-					e.getDestinations().remove(new Integer(e.getDestination()));
+					e.getDestinations().remove(new Integer(e.getCurrentFloor()));
 					e.setElevatorState(LOADING);
 					e.execute(0);
 					System.out.println("End of a move thread");
@@ -80,7 +87,7 @@ public enum ElevatorState {
 				e.setMoving(false);
 				int direction = e.getDirection();
 				e.setDirection(0);
-				Thread closeDoor = new Thread(new Runnable() {
+				Thread openDoor = new Thread(new Runnable() {
 					@Override
 					public void run() {
 						try {
@@ -105,48 +112,18 @@ public enum ElevatorState {
 								e.setDestination(e.getDestinations().get(0));
 							}
 							e.execute(e.getDestination());
+						}else{
+							e.setElevatorState(IDLE);
 						}
 					}
 
 				});
-				closeDoor.start();
-				return IDLE;
+				openDoor.start();
+				return LOADING;
 			}else{
 				e.addNewDestination(floor);
 				return LOADING;
 			}
-			/*
-	        while(e.getIsMoving()){
-	            try {
-					System.out.println("Fault detected: Door is stuck open");
-	                wait();
-	            }
-	            catch (InterruptedException e1){}
-	        }
-	        try {
-				sleep(2000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-	        e.getDoor().setDoorsOpen(true);
-	        System.out.println("Elevator doors open. Please board.");
-	        try {
-				sleep(5000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-	        //if there are more destinations to go, close doors transit to MOVING state, else keep doors open and transit to IDLE state
-	        if(!e.getDestinations().isEmpty()) {
-				e.getDoor().setDoorsOpen(false);
-				System.out.println("Elevator doors are now closed.");
-				return IDLE;
-			}else{
-
-	        	return MOVING;
-			}
-
-
-			 */
 		}
 
 
