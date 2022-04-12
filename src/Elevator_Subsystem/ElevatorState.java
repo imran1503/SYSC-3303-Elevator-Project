@@ -6,6 +6,9 @@ public enum ElevatorState {
 	IDLE {
 		@Override
 		ElevatorState goTo(Elevator e, int floor) {
+			if(floor == 0){
+				return IDLE;
+			}
 			System.out.println("===Elevator "+ e.getId()+" is in IDLE state===\n");
 			//determine a direction
 			if(e.getCurrentFloor() > floor) {

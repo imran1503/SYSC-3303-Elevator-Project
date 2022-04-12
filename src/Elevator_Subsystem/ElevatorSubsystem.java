@@ -518,7 +518,6 @@ public class ElevatorSubsystem extends Thread {
         } catch (IndexOutOfBoundsException e) {
             System.out.println(elevators.get(elevatorid).getDestinations().size());
         }
-
         return elevators.get(elevatorid).getDestinations();
 
     }
