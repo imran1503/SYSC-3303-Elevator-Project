@@ -341,7 +341,7 @@ public class ElevatorSubsystem extends Thread {
                 long startL = System.nanoTime();
                 //packet structure: data[0]=elevindex, data[1]=0, data[2]=4
                 try {
-                    elevators.get(elevatorIndex).load();
+                    //elevators.get(elevatorIndex).load();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -547,11 +547,13 @@ public class ElevatorSubsystem extends Thread {
         System.out.println();
 
         elevatorid--;
+
         System.out.println("DEBUG >> Plan Elevator Trip Id: "+ elevatorid);
         end = System.nanoTime();
         total = (end - start);
         System.out.println("(" + (total/Math.pow(10,9)) + "s)" );
         System.out.println();
+
 
         System.out.println("DEBUG >> Plan Elevator Dests: " + elevators.get(elevatorid).getDestinations());
         end = System.nanoTime();
@@ -562,22 +564,21 @@ public class ElevatorSubsystem extends Thread {
         Collections.sort(elevators.get(elevatorid).getDestinations()); //Sort by inc fl #
         try {
 
-            if (elevators.get(elevatorid).getMoving() == false && elevators.get(elevatorid).getCurrentFloor() < elevators.get(elevatorid).getDestinations().get(0)) { // if at floor 3 and the lowest button pressed is 2 AND not moving / at a floor waiting
+            if (!elevators.get(elevatorid).getMoving() && elevators.get(elevatorid).getCurrentFloor() < elevators.get(elevatorid).getDestinations().get(0)) { // if at floor 3 and the lowest button pressed is 2 AND not moving / at a floor waiting
                 elevators.get(elevatorid).setDirection(1); //aces
                 return elevators.get(elevatorid).getDestinations();
 
-            } else if (elevators.get(elevatorid).getMoving() == false && elevators.get(elevatorid).getCurrentFloor() < elevators.get(elevatorid).getDestinations().get(elevators.get(elevatorid).getDestinations().size() / 4)) {
+            } else if (!elevators.get(elevatorid).getMoving() && elevators.get(elevatorid).getCurrentFloor() < elevators.get(elevatorid).getDestinations().get(elevators.get(elevatorid).getDestinations().size() / 4)) {
                 elevators.get(elevatorid).setDirection(1);
                 return elevators.get(elevatorid).getDestinations();
-            } else if (elevators.get(elevatorid).getMoving() == false && elevators.get(elevatorid).getCurrentFloor() > elevators.get(elevatorid).getDestinations().get(elevators.get(elevatorid).getDestinations().size() - 2)) {
+            } else if (!elevators.get(elevatorid).getMoving() && elevators.get(elevatorid).getCurrentFloor() > elevators.get(elevatorid).getDestinations().get(elevators.get(elevatorid).getDestinations().size() - 2)) {
                 Collections.reverse(elevators.get(elevatorid).getDestinations());
-                elevators.get(elevatorid).setDirection(0);  // desc
+                elevators.get(elevatorid).setDirection(-1);  // desc
                 return elevators.get(elevatorid).getDestinations();
             }
         } catch (IndexOutOfBoundsException e) {
             System.out.println(elevators.get(elevatorid).getDestinations().size());
         }
-
         return elevators.get(elevatorid).getDestinations();
 
     }

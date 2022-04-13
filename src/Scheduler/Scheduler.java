@@ -657,6 +657,22 @@ public class Scheduler extends Thread {
                 int floorloc = Integer.parseInt(floorNumberS);
                 int floorDir = Integer.parseInt(elevDirectionS);
                 for (int i = 0; i < locations.length; i++) {
+                    //if no elevator is assigned, sign it to elevator, then try to find better elevator to replace it.
+                    if (bestElevator == -1){
+                        bestElevator = i;
+                        shortestDistance = Math.abs(locations[i] - floorloc);
+                    }else{
+                        int floorDiff = floorloc-locations[i];
+                        if(directions[i] == 0 || directions[i]*floorDiff>0){
+                            if(shortestDistance > Math.abs(floorDiff)){
+                                shortestDistance = Math.abs(floorDiff);
+                                bestElevator = i;
+                            }
+                        }
+                    }
+
+
+                    /*
                     if (directions[i] == 1 && floorloc > locations[i]) {
                         sum = locations[i] - floorloc;
                     } else if (directions[i] == 0 && floorloc < locations[i]) {
@@ -674,6 +690,7 @@ public class Scheduler extends Thread {
                         shortestDistance = sum;
                         bestElevator = i;
                     }
+                    */
                 }
                 if (debug) {
                     System.out.println("DEBUG >>> Request from floor, best elevator: " + bestElevator);
@@ -685,7 +702,7 @@ public class Scheduler extends Thread {
                 information[3] = (byte) 0;
                 information[4] = (byte) Integer.parseInt(elevDirectionS);
                 information[5] = (byte) 0;
-                information[6] = (byte) Integer.parseInt(elevDestS);
+                information[6] = (byte) floorloc;
                 information[7] = (byte) 0;
                 information[8] = (byte) fault;
                 long endBE = System.nanoTime();
