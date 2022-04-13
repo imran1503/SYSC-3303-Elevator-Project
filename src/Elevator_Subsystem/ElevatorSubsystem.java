@@ -36,7 +36,7 @@ public class ElevatorSubsystem extends Thread {
     private boolean debug;
 
     /**
-     * Creates an arraylist of elevators and Initializes receive
+     * Creates an arrayList of elevators and Initializes receive
      * Sockets for the Floor and scheduler
      *
      * @param elevatorlist
@@ -324,9 +324,7 @@ public class ElevatorSubsystem extends Thread {
                         System.out.println();
 
                     }
-                    elevators.get(elevatorIndex).move(data[4]);
-//                    elevators.get(elevatorIndex).addDestinations(data[6]);
-//                    planElevatorTrip(elevators.get(elevatorIndex).getId());
+                 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

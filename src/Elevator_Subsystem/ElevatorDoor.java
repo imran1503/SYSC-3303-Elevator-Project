@@ -6,7 +6,7 @@ public class ElevatorDoor {
     /**
     * Closes the doors of the elevator
     */
-    public ElevatorDoor(){ doorsOpen = false; }
+    public ElevatorDoor(){ doorsOpen = true; }
 
     /** 
     * Returns the boolean of the elevator doors

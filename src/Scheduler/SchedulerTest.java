@@ -83,8 +83,6 @@ public class SchedulerTest {
         elevator.getDestinations().add( floor.getFloorNumber());
         elevator.getDestinations().add( floor3.getFloorNumber());
         elevator.getDestinations().add( floor2.getFloorNumber());
-      //  scheduler.loadElevator(elevator.getId(), floor2.getFloorNumber());
-      //  scheduler.loadElevator(elevator.getId(), floor3.getFloorNumber());
         assert(2 == elevator.getDestinations().get(2));
 
 

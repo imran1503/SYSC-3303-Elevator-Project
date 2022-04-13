@@ -23,8 +23,6 @@ public class Scheduler extends Thread {
     DatagramSocket recieveElevatorSocket;
     private boolean available = false;
     private SchedulerState schedulerState = SchedulerState.IDLE_STATE;
-    //store multiple elevator position, do it somehow xD
-    //String[] split = new String[8];
     ArrayList<Floor> floorArrayList;
     ArrayList<Integer> elevatorList;
     int elevatorIndex;
@@ -35,7 +33,7 @@ public class Scheduler extends Thread {
 
 
     /**
-     * This creates a new scheduler that initalizes all the ports required for it to
+     * This creates a new scheduler that initializes all the ports required for it to
      * contact the other subsystems: Elevator and Floor
      */
     public Scheduler(){
@@ -131,13 +129,6 @@ public class Scheduler extends Thread {
      * @param elevatorId
      */
     public void loadElevator(int elevatorId, int floorNum) {
-//        elevator.getDoor().setDoorsOpen(true);
-//        System.out.println("Elevator doors open. Please board.");
-//
-//        elevator.getDoor().setDoorsOpen(false);
-//        System.out.println("Elevator doors are now closed.");
-//
-//        elevator.pressFloorNumberButton(floorNum);
         byte[] data = new byte[3];
         data[0] = (byte) elevatorId;
         data[1] = (byte) 0;
@@ -162,35 +153,13 @@ public class Scheduler extends Thread {
         return this.schedulerState;
     }
 
-//    /**
-//     * Request for an elevator from a floor.
-//     *
-//     * @param floor
-//     */
-//    public synchronized void callElevator(Event event, Elevator elevator, Floor floor) throws InterruptedException {
-//        while (available == false) {
-//            try {
-//                wait();
-//            } catch (InterruptedException e) {
-//            }
-//        }
-//        loadElevator(elevator, floor.getFloorNumber());
-//        available = false;
-//        System.out.println("Test> " + event.getFloorNumber() + " ");
-//        // planElevatorTrip(elevator); // moved to elevator
-//        moveElevator(elevator);
-//        schedulerState = SchedulerState.ACTIVE_STATE;
-//        notifyAll();
-//    }
-
-
     /**
      * Stop an elevator at a specified floor.
      * This function tells the elevator to stop via datagramPackets sent over DatagramSockets.
      * @param floorNum
      * @param elevatorId
      */
-    public synchronized void stopElevatorAtFloor(int elevatorId, int floorNum) { // From arrival sensor / floor Subsys run()
+    public synchronized void stopElevatorAtFloor(int elevatorId, int floorNum) { // From arrival sensor / floor Subsystem run()
         byte[] data = new byte[5];
         data[0] = (byte) elevatorId;
         data[1] = 0;
@@ -258,7 +227,6 @@ public class Scheduler extends Thread {
         } catch (UnknownHostException | InterruptedException e) {
             e.printStackTrace();
         }
-        //TODO send packet to tell elevator to change variables to correct state
         try {
             sendElevator(elevatorId, data);
         }
@@ -287,7 +255,7 @@ public class Scheduler extends Thread {
         }
 
 
-        //retireve dest from packet
+        //Retrieve dest from packet
 
         byte[] tempByteDest = new byte[23];
         recieveElevatorPacket = new DatagramPacket(tempByteDest, tempByteDest.length);
@@ -300,7 +268,7 @@ public class Scheduler extends Thread {
 
         byte[] dests = recieveElevatorPacket.getData();
 
-        openDoor(elevatorId, dests[0]); //TODO Verify this
+        openDoor(elevatorId, dests[0]); 
 
 
         byte[] dataremove = new byte[3];
@@ -320,28 +288,8 @@ public class Scheduler extends Thread {
             e.printStackTrace();
         }
 
-
-
     }
 
-
-
-
-//   NOT NEEDED BUT DON'T REMOVE, FOUNDATION OF IDEAS TO UNDERSTAND EVERYTHING
-
-//    public void moveElevator(Elevator elevator) throws InterruptedException {
-//        if (elevator.getDestinations().get(0) < 1 || elevator.getDestinations().get(elevator.getDestinations().size() - 1) > elevator.getNumFloorTotal()) {
-//            System.out.println("error enter valid floor");
-//        } else if (elevator.getDestinations().get(0) == elevator.getCurrentFloor()) {
-//            System.out.println("do nothing");
-//        } else if (elevator.getDestinations().get(0) > elevator.getCurrentFloor()) {
-//            //SIGNAL MOTOR TO MOVE UP
-//            elevator.move(1);
-//        } else {
-//            //SIGNAL MOTOR TO MOVE DOWN
-//            elevator.move(0); // planTrip will choose the direction based on the destinations.
-//        }
-//    }
 
     public synchronized void deactivateElevator(Elevator elevator) {
         elevator.setEvent(false);
@@ -359,11 +307,6 @@ public class Scheduler extends Thread {
         for(int i = 0; i < elevatorList.size(); i++) {
 
             //CREATE PACKET TO ASK FOR ALL DESTINATIONS OF A ELEVATOR
-
-
-            //eleIndex = data[0], data[1] = 0, data[2]=10, data[3] = 0
-
-            //Need to get the elevator isMoving
 
             byte[] data = new byte[3];
             data[0] = (byte) i;
@@ -497,14 +440,6 @@ public class Scheduler extends Thread {
 
             // IF its 8 bytes long, then its a event packet
             if (floordata.length == 8) {
-//            String floorString = new String(recieveFloorPacket.getData());
-//            this.split = floorString.split("0");
-//
-//            // if floor calls elevator and another elevator is active the scheduler
-//            // should call another inactive elevator
-//            try {
-//                System.out.println("Time" + split[0] + "\n" + "Floor number" + split[1] + "\n" + "direction" + elevDirectionS + "\n" + "destination" + elevDestS);
-//            }
 
                 if (floordata[7] == 1) {
                     System.out.println("\nFault: There is fault in event data provided");
@@ -516,7 +451,7 @@ public class Scheduler extends Thread {
                 String elevDirectionS = null;
                 String elevDestS = null;
                 try {
-                    floorNumberS = String.valueOf(floordata[1]); //split[1]
+                    floorNumberS = String.valueOf(floordata[1]); 
                     elevDirectionS = String.valueOf(floordata[3]);
                     elevDestS = String.valueOf(floordata[5]);
                     if (debug) {
@@ -533,11 +468,7 @@ public class Scheduler extends Thread {
 
                 byte[] recieveTempData = new byte[16];
                 try {
-                    //  sendElevatorPacket = new DatagramPacket(tempData, tempData.length, InetAddress.getByName("localhost"), 5002);
                     sendElevator(elevatorIndex, tempData);
-//                System.out.println("DEBUG >> SE PORT: " + sendElevatorSocket.getPort());
-//                System.out.println("DEBUG >> RE PORT: " + recieveElevatorSocket.getPort());
-
                     recieveElevatorPacket = new DatagramPacket(recieveTempData, recieveTempData.length);
                     recieveElevatorSocket.receive(recieveElevatorPacket);
                     if (debug) {
@@ -559,10 +490,7 @@ public class Scheduler extends Thread {
 
                 long endRF = System.nanoTime();
                 System.out.println("Timing of RecieveFloor: " + (endRF - startRF) + ", start = " + startRF + ", end = " + endRF);
-//            catch (NullPointerException e){
-//                System.out.println("DEBUG >> Null Pointer Exception @ receiving packet / sending packet ");
-//                System.out.println("DEBUG >> Have you run elevator?");
-//            }
+
                 long startBE = System.nanoTime();
 
 
@@ -608,7 +536,7 @@ public class Scheduler extends Thread {
                     recieveElevatorPacket = new DatagramPacket(recievedesttemp, recievedesttemp.length);
                     System.out.println("--------------------------");
 
-                    sendElevator(0, tempDest1); // X05
+                    sendElevator(0, tempDest1); 
                     System.out.println("--------------------------");
                     recieveElevatorSocket.receive(recieveElevatorPacket);
                     System.out.println("--------------------------");
@@ -670,27 +598,6 @@ public class Scheduler extends Thread {
                             }
                         }
                     }
-
-
-                    /*
-                    if (directions[i] == 1 && floorloc > locations[i]) {
-                        sum = locations[i] - floorloc;
-                    } else if (directions[i] == 0 && floorloc < locations[i]) {
-                        sum = floorloc - locations[i];
-                    } else {
-                        for (int k = 0; k < 23; k++) {
-                            if (destList.get(i)[k] > floorloc) {
-                                sum = destList.get(i)[k] - floorloc;
-                            } else {
-                                sum = floorloc - destList.get(i)[k];
-                            }
-                        }
-                    }
-                    if (sum < shortestDistance) {
-                        shortestDistance = sum;
-                        bestElevator = i;
-                    }
-                    */
                 }
                 if (debug) {
                     System.out.println("DEBUG >>> Request from floor, best elevator: " + bestElevator);
@@ -767,17 +674,6 @@ public class Scheduler extends Thread {
 
 
         return -1;
-//            byte[] ack = "Acknowledgement".getBytes();
-//            try {
-//                DatagramPacket recieveFloorPacket = new DatagramPacket(ack, ack.length, InetAddress.getByName("localhost"), 5002);
-//                // recieveFloorSocket.send(recieveFloorPacket);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                System.exit(1);
-//            }
-
-
-
 
         }
 
@@ -836,16 +732,10 @@ public class Scheduler extends Thread {
                 System.exit(1);
             }
 
-            // if last indx of information is equal 1, send packet to elevator and elevator will call move(up) with params in packet
-            // if 2 call open door, then load
-            //elevatorList.get(selectedElevator).setDestination(Integer.parseInt(floorNumberS));
-            // elevatorList.get(selectedElevator).move(Integer.parseInt(floorNumberS));
-
 
             catch (NullPointerException e) {
-                //e.printStackTrace();
+            	System.err.print(e);
                 System.out.println("Nothing yet.");
-                //System.exit(1);
             }
 
             byte[] ack = "Acknowledgement".getBytes();
@@ -865,7 +755,7 @@ public class Scheduler extends Thread {
     public void run() {
         // Get interrupted when : Floor calls elevator through scheduler;     elevatorButton pressed to add destination;
         // after  planElevatorTrip() scheduling, set elevator.isEvent = true
-        //  this.schedulerState.change(elevatorIndex, this);
+    	
         start = System.nanoTime();
 
         Boolean run = true;
@@ -900,7 +790,7 @@ public class Scheduler extends Thread {
                 }
 
 
-                //retireve dest from packet
+                //Retrieve dest from packet
 
                 byte[] tempByteDest = new byte[23];
                 recieveElevatorPacket = new DatagramPacket(tempByteDest, tempByteDest.length);
@@ -925,10 +815,8 @@ public class Scheduler extends Thread {
 
                     byte[] recieveTempData = new byte[16];
                     try {
-                        //  sendElevatorPacket = new DatagramPacket(tempData, tempData.length, InetAddress.getByName("localhost"), 5002);
+                        
                         sendElevator(elevatorIndex, tempData);
-//                System.out.println("DEBUG >> SE PORT: " + sendElevatorSocket.getPort());
-//                System.out.println("DEBUG >> RE PORT: " + recieveElevatorSocket.getPort());
 
                         recieveElevatorPacket = new DatagramPacket(recieveTempData, recieveTempData.length);
                         recieveElevatorSocket.receive(recieveElevatorPacket);
@@ -947,10 +835,6 @@ public class Scheduler extends Thread {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-//            catch (NullPointerException e){
-//                System.out.println("DEBUG >> Null Pointer Exception @ receiving packet / sending packet ");
-//                System.out.println("DEBUG >> Have you run elevator?");
-//            }
 
                     int[] locations = new int[4];
 

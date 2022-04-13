@@ -45,7 +45,7 @@ public class FloorTest {
 
         ArrayList<Elevator> elevators = new ArrayList<>();
         ElevatorSubsystem elevatorSS = new ElevatorSubsystem(elevators);
-        Elevator elevator =new Elevator(0,3);
+        Elevator elevator = new Elevator(0,3);
         elevators.add(elevator);
 
         for (int i = 0; i < 3; i++) {
@@ -66,18 +66,8 @@ public class FloorTest {
                 floorButtons.add(tempButtonUp);
                 floorButtons.add(tempButtonDown);
             }
-            for (int j = 0; j < 1.; j++) {
-
-            }
         }
-
-        File file1 = new File("src/events.txt");
-        BufferedReader file = new BufferedReader( new FileReader(file1));
-
-
-
-
-        Floor floor = new Floor(1, floorLamps, 22 ,arrivalSensors );
+        Floor floor = new Floor(1, floorLamps, 22 ,arrivalSensors);
         
         assertEquals(1, floor.getFloorNumber());
 	}

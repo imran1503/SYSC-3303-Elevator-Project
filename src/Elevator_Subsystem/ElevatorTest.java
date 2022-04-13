@@ -65,7 +65,7 @@ public class ElevatorTest {
         Floor floor2 = new Floor(2, floorLamps, 22,arrivalSensors);
         Floor floor3 = new Floor(3,  floorLamps, 22,arrivalSensors);
 
-        assertEquals(false, elevator.getDoor().getDoorsOpen());
+        assertEquals(true, elevator.getDoor().getDoorsOpen());
         elevator.getDoor().setDoorsOpen(true);
         assertEquals(true, elevator.getDoor().getDoorsOpen());
     }

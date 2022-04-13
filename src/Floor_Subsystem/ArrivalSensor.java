@@ -87,9 +87,6 @@ public class ArrivalSensor {
 			e.printStackTrace();
 		}
 		if(hasElevator(socket)==true && getFloorNumber() == recieveTemp[0] ){
-
-				// scheduler.stopElevatorAtFloor(elevator,floorNumber);
-
 			return true;
 		}
 		return false;

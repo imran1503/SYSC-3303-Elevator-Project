@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
-//import Elevator_Subsystem.*;
 
 public class Elevator  {
     private ArrayList<ElevatorButton> buttons;
@@ -19,7 +18,6 @@ public class Elevator  {
     private int currentFloor;
     private ArrayList<Integer> destinations;
     private int direction;   // 1 = ascending 0 = descending
-    //Change name later
     private Boolean isEvent;
     private int numFloorTotal;
     private int lastButtonPressed;
@@ -215,7 +213,7 @@ public class Elevator  {
 
     /**
      * this method changes the elevator lamp based on the floor
-     * that is inputted.
+     * that is inputed.
      *
      * @param floor
      */
@@ -230,48 +228,6 @@ public class Elevator  {
 
         }
     }
-
-    /**
-     * Moves to the specified direction
-     * @param direction
-     * @throws InterruptedException
-     */
-    public synchronized void move(int direction) throws InterruptedException {
-
-        /*
-        setDirection(direction);
-        this.direction=direction;
-        System.out.println("Move: move?" + isMoving);
-        System.out.println("dir: " + this.direction);
-        while (isMoving) {
-            try {
-                wait(50);
-                System.out.println("DEBUG >> In Move Wait Loop~~~");
-            } catch (InterruptedException e) {
-                System.err.print(e);
-                e.printStackTrace();
-            }
-        }
-        System.out.println("Move try");
-
-        try {
-            if (direction == 1) {
-                System.out.println("CurFloor ++");
-                currentFloor++;
-            } else {
-                System.out.println("CurFloor --");
-                currentFloor--;
-            }
-            wait(500);
-            //setMoving(true);
-            getMotor().setMoving(true);
-            System.out.println("After move: move?" + isMoving);
-            System.out.println("dir: " + this.direction);
-        }
-        catch (InterruptedException e){}
-*/
-    }
-
 
 
     /**

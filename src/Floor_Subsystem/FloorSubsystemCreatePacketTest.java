@@ -25,8 +25,6 @@ public class FloorSubsystemCreatePacketTest {
 	        int amountOfFloorsinBuilding = 22;
 
 	        ArrayList<Elevator> elevators = new ArrayList<>();
-	        //get elevators from elevator ss via packets
-//	        elevators.add(elevator);
 
 	        //create floor parts
 	        ArrayList<FloorLamp> floorLamps = new ArrayList<>();
@@ -62,9 +60,9 @@ public class FloorSubsystemCreatePacketTest {
 
 
 	        DatagramPacket packet =  floorSS.createPacket(0);
-	        assertEquals(4, packet.getData()[1]);
+	        assertEquals(20, packet.getData()[1]);
 	        assertEquals(0, packet.getData()[3]);
-	        assertEquals(3, packet.getData()[5]);
+	        assertEquals(10, packet.getData()[5]);
 	    }
 
 }

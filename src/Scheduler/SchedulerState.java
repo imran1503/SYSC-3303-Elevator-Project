@@ -14,7 +14,6 @@ public enum SchedulerState {
                 
                 //get elevator dests 
 
-
                 byte[] dataGetDest = new byte[3];
                 dataGetDest[0] = (byte) elevatorId;
                 dataGetDest[1] = 0;
@@ -32,7 +31,7 @@ public enum SchedulerState {
                 }
 
 
-                //retireve dest from packet
+                //Retrieve dest from packet
 
                 byte[] tempByteDest = new byte[23];
                 scheduler.recieveElevatorPacket = new DatagramPacket(tempByteDest, tempByteDest.length);
@@ -77,8 +76,6 @@ public enum SchedulerState {
 
                     scheduler.stopElevatorAtFloor(elevatorId, dests[0]);
 
-                    // elevator.getDestinations().remove(elevator.getDestinations().get(0));
-                    // elevator.getDestinations().remove(elevator.getCurrentFloor());
                     byte[] dataremove = new byte[3];
                     dataremove[0] = (byte) elevatorId;
                     dataremove[1] = 0;

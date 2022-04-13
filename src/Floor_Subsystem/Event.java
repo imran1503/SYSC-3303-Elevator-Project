@@ -5,10 +5,7 @@ package Floor_Subsystem;
 
 import java.sql.Timestamp;
 
-/**
- * @author Sukhrobjon
- *
- */
+
 public class Event {
 	
 	private Timestamp timestamp;
