@@ -242,7 +242,7 @@ public class FloorSubsystem extends Thread {
             }
             tempPacket = new DatagramPacket(tempByteArray, tempByteArray.length, InetAddress.getLocalHost(), 5003);
             long endCP = System.nanoTime();
-            System.out.println("Timing of RecieveFloor: " + (endCP - startCP) + ", start = " + startCP + ", end = " + endCP);
+            System.out.println("Timing of createPacket: " + (endCP - startCP) + ", start = " + startCP + ", end = " + endCP);
             return tempPacket;
 //        } else {
 //            return null;
@@ -261,7 +261,7 @@ public class FloorSubsystem extends Thread {
     public DatagramPacket createPacket(int elevatorIndex, int floorNum) throws IOException {
         if (debug) {System.out.println("DEBUG >> In create Packet for stopping a elevator");}
         DatagramPacket tempPacket;
-        byte[] tempByteArray = new byte[4];
+        byte[] tempByteArray = new byte[5];
         byte[] ack = "acknowledgment".getBytes();
 
  
@@ -317,9 +317,6 @@ public class FloorSubsystem extends Thread {
     public DatagramPacket checkArrivalSensors(){
         byte[] data = new byte[24];
 
-
-
-
         DatagramPacket packet =  new DatagramPacket(data, data.length);
         return packet;
     }
@@ -344,6 +341,7 @@ public class FloorSubsystem extends Thread {
                     DatagramPacket packet = null;
                     try {
                         packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(),4000);
+
                         socket.send(packet);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -364,6 +362,7 @@ public class FloorSubsystem extends Thread {
 //            	System.out.println("*********Index = " + index);
             	DatagramPacket packetToSend = createPacket(index);
             	//TODO: check arrival sensor
+                long startAS = System.nanoTime();
             	checkArrivalSensors();
             	if(packetToSend == null) continue;
                 byte[] temp = packetToSend.getData();
@@ -379,61 +378,22 @@ public class FloorSubsystem extends Thread {
 //                sendServerSocket.send(createPacket(0));
                 sendServerSocket.send(packetToSend);
                 long sendCp = System.nanoTime();
-                System.out.println("Timing of send cp " + sendCp);
+                System.out.println("DEBUG >> Timing of send cp " + sendCp);
                 //ASK ELEVATORS WHERE THEY ARE
 
+                long endAS = System.nanoTime();
+                if (debug){System.out.println("DEBUG >>Timing of Best Elevator: " + (endAS - startAS) + ", start = " + startAS + ", end = " + endAS);}
 
                 //Receives ack packet from floor
                 byte[] ack = "Acknowledgement".getBytes();
                 receiveServerPacket = new DatagramPacket(ack, ack.length);//empty packet created
-
-                System.out.println("*****Before receiveServerSocket");
-//                receiveServerSocket.receive(receiveServerPacket);
-                System.out.println("*****After receiveServerSocket");
-
-                if (debug) { System.out.println("out of floor loop 1");}
-
                 index++;
             }
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        if (debug) {System.out.println("out of floor loop 2");}
 
-//
-//
-//        for (int i = 0; i < eventArrayList.size() ; i++) {
-//            try {
-//                System.out.println(floors.get(eventArrayList.get(i).getFloorNumber()).getElevators().get(0).getDestinations());
-//
-//                scheduler.callElevator(eventArrayList.get(i),floors.get(eventArrayList.get(i).getFloorNumber()).getElevators().get(0), floors.get(eventArrayList.get(i).getFloorNumber()));
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-
-
-
-
-        if (debug) {System.out.println("Floor subsystem pre Loop check ");}
-//        for (int i = 0; i < floors.size(); i++) {
-//            if (floors.get(i).getArrivalSensors().get(i).getArrivalSensorData(sendElevatorSocket)) {
-//
-//                try {
-//                    createPacket(floors.get(i).getElevators().get(0).getId(), floors.get(i).getFloorNumber());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                // scheduler.stopElevatorAtFloor(floors.get(i).getElevators().get(0),floors.get(i).getFloorNumber() );
-//
-//                if (debug) {System.out.println("Stop elevator from sensor");}
-//            } 
-//              else{}
-//
-//
-//        }
 
 
     }

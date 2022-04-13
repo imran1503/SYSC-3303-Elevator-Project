@@ -556,10 +556,15 @@ public class Scheduler extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                long endRF = System.nanoTime();
+                System.out.println("Timing of RecieveFloor: " + (endRF - startRF) + ", start = " + startRF + ", end = " + endRF);
 //            catch (NullPointerException e){
 //                System.out.println("DEBUG >> Null Pointer Exception @ receiving packet / sending packet ");
 //                System.out.println("DEBUG >> Have you run elevator?");
 //            }
+                long startBE = System.nanoTime();
+
 
                 int[] locations = new int[4];
 
@@ -700,6 +705,9 @@ public class Scheduler extends Thread {
                 information[6] = (byte) floorloc;
                 information[7] = (byte) 0;
                 information[8] = (byte) fault;
+                long endBE = System.nanoTime();
+                System.out.println("Timing of Best Elevator: " + (endBE - startBE) + ", start = " + startBE + ", end = " + endBE);
+                long startSM = System.nanoTime();
 
                 if (debug) {
                     System.out.print("DEBUG >> Setting move packets of elevators in receive floor: information: ");
@@ -719,6 +727,8 @@ public class Scheduler extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                long endSM = System.nanoTime();
+                System.out.println("Timing of move elevator: " + (endSM - startSM) + ", start = " + startSM + ", end = " + endSM);
             }
 
 
@@ -756,19 +766,18 @@ public class Scheduler extends Thread {
             }
 
 
-            byte[] ack = "Acknowledgement".getBytes();
-            try {
-                DatagramPacket recieveFloorPacket = new DatagramPacket(ack, ack.length, InetAddress.getByName("localhost"), 5002);
-                // recieveFloorSocket.send(recieveFloorPacket);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
+        return -1;
+//            byte[] ack = "Acknowledgement".getBytes();
+//            try {
+//                DatagramPacket recieveFloorPacket = new DatagramPacket(ack, ack.length, InetAddress.getByName("localhost"), 5002);
+//                // recieveFloorSocket.send(recieveFloorPacket);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                System.exit(1);
+//            }
 
 
-            long endRF = System.nanoTime();
-            System.out.println("Timing of RecieveFloor: " + (endRF - startRF) + ", start = " + startRF + ", end = " + endRF);
-            return -1;
+
 
         }
 
